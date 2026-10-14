@@ -61,27 +61,36 @@ function openDb(){return new Promise((resolve,reject)=>{if(!('indexedDB' in wind
 async function readCachedTarget(){const db=await openDb();if(!db)return null;return new Promise(resolve=>{const req=db.transaction(DB_STORE,'readonly').objectStore(DB_STORE).get(DB_KEY);req.onsuccess=()=>resolve(req.result||null);req.onerror=()=>resolve(null)})}
 async function saveCachedTarget(buffer){const db=await openDb();if(!db)return;await new Promise(resolve=>{const tx=db.transaction(DB_STORE,'readwrite');tx.objectStore(DB_STORE).put(buffer,DB_KEY);tx.oncomplete=resolve;tx.onerror=resolve})}
 function loadMindAR(){
- if(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler&&window.MINDAR.IMAGE.Controller)return Promise.resolve();
+ if(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler&&window.MINDAR.IMAGE.Controller)return Promise.resolve(window.MINDAR.IMAGE);
  if(mindLoading)return mindLoading;
  mindLoading=(async()=>{
+  // MindAR 1.1.4 is the version used in the official classic-script quick-start example.
+  // 1.2.x may serve an ES module build which cannot be loaded via a classic <script> tag.
   const urls=[
-   'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.2.5/dist/mindar-image.prod.js',
-   'https://cdn.jsdelivr.net/npm/mind-ar@1.2.5/dist/mindar-image.prod.js'
+   'https://cdn.jsdelivr.net/gh/hiukim/mind-ar-js@1.1.4/dist/mindar-image.prod.js',
+   'https://unpkg.com/mind-ar@1.1.4/dist/mindar-image.prod.js'
   ];
   let lastError=null;
   for(const url of urls){
    try{
     await new Promise((resolve,reject)=>{
      const script=document.createElement('script');script.src=url;script.async=true;
-     const timer=setTimeout(()=>{script.remove();reject(new Error('Délai dépassé au chargement de MindAR.'))},20000);
-     script.onload=()=>{clearTimeout(timer);if(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler&&window.MINDAR.IMAGE.Controller)resolve();else reject(new Error('Le script s’est chargé, mais l’API MindAR n’est pas disponible.'))};
-     script.onerror=()=>{clearTimeout(timer);script.remove();reject(new Error('Impossible de charger MindAR depuis '+new URL(url).host))};
+     let settled=false;
+     const timer=setTimeout(()=>finish(new Error('Délai dépassé au chargement de MindAR depuis '+new URL(url).host)),25000);
+     function finish(error){
+      if(settled)return;settled=true;clearTimeout(timer);
+      if(error){script.remove();reject(error);return}
+      if(window.MINDAR&&window.MINDAR.IMAGE&&window.MINDAR.IMAGE.Compiler&&window.MINDAR.IMAGE.Controller){resolve();return}
+      script.remove();reject(new Error('Le fichier est téléchargé, mais Compiler/Controller ne sont pas exposés. Le format du build est incompatible.'));
+     }
+     script.onload=()=>finish(null);
+     script.onerror=()=>finish(new Error('Impossible de charger le build MindAR depuis '+new URL(url).host));
      document.head.appendChild(script);
     });
-    return;
+    return window.MINDAR.IMAGE;
    }catch(e){lastError=e}
   }
-  throw lastError||new Error('MindAR ne s’est pas chargé.');
+  throw new Error('MindAR ne s’est pas initialisé. '+(lastError?.message||'Vérifiez les CDN et la console du navigateur.'));
  })();
  return mindLoading;
 }
