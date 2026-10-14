@@ -126,7 +126,7 @@ document.getElementById('aecvLogo').addEventListener('error',()=>{document.getEl
 document.querySelector('[data-i18n="brandSub"]').textContent=CONFIG.brand.name;
 const video=document.getElementById('video');
 let stream=null, controller=null, mindLoading=null, scanning=false, targetLostTimer=null, currentTargetIndex=0;
-let map=null, siteMarker=null, userMarker=null, leafletLoading=null, userLatLng=null, streetLayer=null, satelliteLayer=null, satelliteOn=false;
+let map=null, siteMarker=null, userMarker=null, leafletLoading=null, userLatLng=null, streetLayer=null, satelliteLayer=null, satelliteOn=false, mapInitPromise=null;
 const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets';
 function t(key){return (CONFIG.ui[currentLanguage]&&CONFIG.ui[currentLanguage][key])||CONFIG.ui.fr[key]||key}
 function localized(obj){if(obj==null)return '';if(typeof obj==='string')return obj;return obj[currentLanguage]||obj.fr||obj.en||''}
@@ -135,15 +135,17 @@ function setLanguage(lang){
  currentLanguage=lang;localStorage.setItem('aecv-language',lang);document.documentElement.lang=lang;
  document.querySelectorAll('[data-i18n]').forEach(el=>{const key=el.dataset.i18n;if(key==='brandSub')el.textContent=CONFIG.brand.name;else el.textContent=t(key)});
  document.querySelectorAll('[data-lang]').forEach(el=>el.classList.toggle('active',el.dataset.lang===lang));
- document.getElementById('detailTitle').textContent=localized(firstTarget.title);
- document.getElementById('detailDescription').textContent=localized(firstTarget.description);
- document.getElementById('transcriptionText').textContent=firstTarget.inscription;
- document.getElementById('transcriptionNote').textContent=localized(firstTarget.note);
- renderLinks();updateProgress();
+ const activeTarget=CONFIG.arTargets[currentTargetIndex]||firstTarget;
+ document.getElementById('detailTitle').textContent=localized(activeTarget.title);
+ document.getElementById('detailDescription').textContent=localized(activeTarget.description);
+ document.getElementById('transcriptionText').textContent=activeTarget.inscription;
+ document.getElementById('transcriptionNote').textContent=localized(activeTarget.note);
+ renderLinks(currentTargetIndex);updateProgress();syncMapBaseButton();
  if(document.getElementById('overlay').classList.contains('show'))renderTargetOverlay(currentTargetIndex);
  if(map&&siteMarker)siteMarker.setPopupContent('<strong>'+t('sitePosition')+'</strong><br><a href="'+CONFIG.site.googleMapsUrl+'" target="_blank" rel="noopener">'+t('openGoogleMaps')+'</a>');
 }
 function showPage(id){
+ if(id!=='arPage'&&(stream||controller))stopDetection();
  document.querySelectorAll('.page').forEach(el=>el.classList.toggle('active',el.id===id));
  document.querySelectorAll('.navbtn').forEach(el=>el.classList.toggle('active',el.dataset.page===id));
  window.scrollTo({top:0,behavior:'smooth'});
@@ -222,6 +224,7 @@ function renderTargetOverlay(index){
  document.getElementById('detailDescription').textContent=localized(target.description);
  document.getElementById('transcriptionText').textContent=target.inscription;
  document.getElementById('transcriptionNote').textContent=localized(target.note);
+ document.getElementById('targetImage').src=target.image;
  renderLinks(index);
 }
 function renderLinks(targetIndex=0){
@@ -287,23 +290,28 @@ function loadLeaflet(){
   throw last||new Error('Leaflet unavailable');
  })();return leafletLoading;
 }
-async function initMap(){
- if(map){setTimeout(()=>map.invalidateSize(),120);return}
- try{
-  await loadLeaflet();
-  document.getElementById('mapFallback').style.display='none';document.getElementById('leafletMap').style.display='block';
-  const lat=CONFIG.site.lat,lng=CONFIG.site.lng;
-  map=L.map('leafletMap',{scrollWheelZoom:false}).setView([lat,lng],17);
-  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'});
-  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'});
-  streetLayer.addTo(map);
-  siteMarker=L.marker([lat,lng]).addTo(map).bindPopup('<strong>'+t('sitePosition')+'</strong><br><a href="'+CONFIG.site.googleMapsUrl+'" target="_blank" rel="noopener">'+t('openGoogleMaps')+'</a>').openPopup();
-  syncMapBaseButton();
-  setTimeout(()=>map.invalidateSize(),180);
- }catch(e){
-  document.getElementById('leafletMap').style.display='none';document.getElementById('mapFallback').style.display='block';
-  document.getElementById('mapStatus').textContent=t('mapStatus')+' '+(e.message||'');
- }
+function initMap(){
+ if(map){setTimeout(()=>map.invalidateSize(),120);return Promise.resolve()}
+ if(mapInitPromise)return mapInitPromise;
+ mapInitPromise=(async()=>{
+  try{
+   await loadLeaflet();
+   document.getElementById('mapFallback').style.display='none';document.getElementById('leafletMap').style.display='block';
+   const lat=CONFIG.site.lat,lng=CONFIG.site.lng;
+   map=L.map('leafletMap',{scrollWheelZoom:false}).setView([lat,lng],17);
+   streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'});
+   satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'});
+   streetLayer.addTo(map);
+   siteMarker=L.marker([lat,lng]).addTo(map).bindPopup('<strong>'+t('sitePosition')+'</strong><br><a href="'+CONFIG.site.googleMapsUrl+'" target="_blank" rel="noopener">'+t('openGoogleMaps')+'</a>').openPopup();
+   syncMapBaseButton();
+   setTimeout(()=>map.invalidateSize(),180);
+  }catch(e){
+   document.getElementById('leafletMap').style.display='none';document.getElementById('mapFallback').style.display='block';
+   document.getElementById('mapBaseToggle').disabled=true;
+   document.getElementById('mapStatus').textContent=t('mapStatus')+' '+(e.message||'');
+  }
+ })().finally(()=>{mapInitPromise=null});
+ return mapInitPromise;
 }
 function toggleMapBase(){
  if(!map||!streetLayer||!satelliteLayer)return;
