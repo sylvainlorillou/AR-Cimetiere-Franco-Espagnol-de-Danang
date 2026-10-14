@@ -53,7 +53,7 @@ const TARGET_IMAGE_DATA = "./plaque_ossuaire.jpg";
 document.getElementById('targetImage').src=TARGET_IMAGE_DATA;
 const video=document.getElementById('video');
 let stream=null, controller=null, mindLoading=null, scanning=false, targetLostTimer=null;
-const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets', DB_KEY='ossuaire-target-v1';
+const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets', DB_KEY='ossuaire-target-v2';
 function setStatus(message, detected=false){document.getElementById('statusText').textContent=message;document.getElementById('status').classList.toggle('detected',detected);document.getElementById('overlay').classList.toggle('show',detected)}
 function setDetail(message){document.getElementById('detailStatus').textContent=message}
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
