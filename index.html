@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172c2b">
+<title>Mémoire vivante — Plaque de l’ossuaire</title>
+<style>
+:root{--ink:#172c2b;--green:#284a43;--paper:#f5f1e8;--gold:#e5cc98;--muted:#69746d;--white:#fffdf8}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}.app{max-width:480px;min-height:100dvh;margin:auto;background:var(--white);padding-bottom:25px;box-shadow:0 0 45px #172c2b10}
+header{background:var(--ink);color:#fffdf8;padding:24px 20px 22px}.eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#d9c9aa;font-weight:700}h1{font:500 28px/1.12 Georgia,serif;margin:10px 0 8px}header p{font-size:12px;line-height:1.5;color:#d9e0d9;margin:0}
+main{padding:17px}.kicker{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:750}h2{font:500 22px Georgia,serif;margin:5px 0 13px}
+.camera{position:relative;background:#101b19;border-radius:14px;overflow:hidden;aspect-ratio:3/4;min-height:290px;color:white}video{position:absolute;width:100%;height:100%;inset:0;object-fit:cover;display:none}.status{position:absolute;top:10px;left:10px;right:10px;z-index:3;padding:10px 12px;border-radius:9px;background:#172c2bdc;font-size:11px;font-weight:700;display:flex;gap:8px;align-items:center}.dot{width:9px;height:9px;border-radius:50%;background:#d7b778;flex:none}.status.detected .dot{background:#8dd0a2;box-shadow:0 0 0 4px #8dd0a222}.frame{position:absolute;inset:19% 8%;border:1px solid #e5cc9880;border-radius:6px;z-index:2;pointer-events:none}.placeholder{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;text-align:center;padding:24px;z-index:1}.placeholder h3{font:500 21px Georgia,serif;margin:0 0 9px}.placeholder p{font-size:12px;line-height:1.55;color:#d9e0d9}.overlay{position:absolute;z-index:4;left:9px;right:9px;bottom:9px;max-height:61%;overflow:auto;border:1px solid #e5cc98;background:#fffdf8;color:var(--ink);border-radius:12px;padding:13px;display:none;box-shadow:0 6px 25px #0005}.overlay.show{display:block}.overlay h3{font:500 18px Georgia,serif;margin:0 0 7px}.overlay p{font:14px/1.48 Georgia,serif;margin:0;white-space:pre-line}.overlay small{display:block;font:10px/1.4 system-ui;color:var(--muted);margin-top:7px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:11px}button{border:0;border-radius:10px;padding:13px 9px;font-size:12px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white}.secondary{background:transparent;border:1px solid #c9c7ba;color:var(--ink)}.card{border:1px solid #e5e0d6;border-radius:12px;padding:14px;margin:12px 0}.card h3{font:500 18px Georgia,serif;margin:0 0 9px}.transcription{font:17px/1.65 Georgia,serif;white-space:pre-line}.tag{display:inline-block;background:#e9efe8;color:#315747;border-radius:20px;padding:5px 8px;font-size:10px;font-weight:750;margin-bottom:9px}.note{font-size:11px;line-height:1.5;color:var(--muted);margin:11px 1px}.links{display:grid;gap:8px}.links a{color:var(--green);border:1px solid #e5e0d6;border-radius:9px;padding:11px;text-decoration:none;font-size:12px;font-weight:700}.links span{display:block;color:var(--muted);font-weight:400;margin-top:3px}.reference{width:100%;max-height:160px;object-fit:contain;display:block;background:#eee8dc;border-radius:8px}.statusline{font-size:11px;color:var(--muted);line-height:1.45;margin-top:9px}
+</style>
+</head>
+<body><div class="app">
+<header><div class="eyebrow">Mémoire vivante · Đà Nẵng</div><h1>La mémoire gravée<br>dans la pierre.</h1><p>Détection expérimentale de la plaque de l’ossuaire, retranscription et ressources historiques.</p></header>
+<main>
+<div class="kicker">Ancrage image · Ossuaire</div><h2>Visez la plaque réelle</h2>
+<div class="camera">
+<video id="video" autoplay playsinline muted></video>
+<div class="placeholder" id="placeholder"><div><div style="font-size:40px;margin-bottom:12px">◎</div><h3>Détecter la plaque</h3><p>Activez la caméra arrière et présentez la plaque devant l’objectif. La détection compare ses détails à la photographie de référence intégrée à cette page.</p></div></div>
+<div class="frame"></div>
+<div class="status" id="status"><span class="dot"></span><span id="statusText">Prêt à démarrer. Autorisez la caméra pour commencer.</span></div>
+<div class="overlay" id="overlay"><span class="tag">PLAQUE PROBABLEMENT RECONNUE</span><h3>À la mémoire des combattants</h3><p>✝
+
+À la mémoire des combattants
+Français et Espagnols
+de l’Expédition Rigault de Genouilly
+Morts en 1858-59-60
+et ensevelis en ces lieux
+
+R. I. P.</p><small>Transcription visuelle provisoire ; à vérifier sur la plaque originale.</small></div>
+</div>
+<div class="controls"><button class="primary" id="startBtn" onclick="startDetection()">Activer la caméra</button><button class="secondary" onclick="stopDetection()">Arrêter</button></div>
+<div class="statusline" id="detailStatus">Le moteur de détection se charge uniquement après avoir activé la caméra. La première initialisation peut prendre quelques secondes.</div>
+<div class="card"><span class="tag">TRANSCRIPTION</span><h3>À la mémoire des combattants</h3><div class="transcription">✝
+
+À la mémoire des combattants
+Français et Espagnols
+de l’Expédition Rigault de Genouilly
+Morts en 1858-59-60
+et ensevelis en ces lieux
+
+R. I. P.</div><p class="note">Transcription provisoire lue sur l’image fournie. Les accents, la ponctuation et les graphies doivent être confirmés sur place.</p></div>
+<div class="card"><h3>Pour aller plus loin</h3><div class="links"><a href="https://fr.wikipedia.org/wiki/Campagne_de_Cochinchine" target="_blank" rel="noopener">Campagne de Cochinchine<span>Repères historiques généraux à recouper avec des sources spécialisées.</span></a><a href="https://gallica.bnf.fr/" target="_blank" rel="noopener">Gallica — Bibliothèque nationale de France<span>Rechercher des ouvrages et journaux d’époque.</span></a><a href="https://www.memoiredeshommes.sga.defense.gouv.fr/" target="_blank" rel="noopener">Mémoire des hommes<span>Portail d’archives militaires françaises.</span></a></div></div>
+<div class="card"><h3>Photographie cible</h3><img class="reference" id="targetImage" alt="Photographie de référence de la plaque de l’ossuaire"><p class="note">Cette image est intégrée au code de la page : aucun fichier image séparé n’est nécessaire pour servir le site.</p></div>
+<p class="note">Limites : il s’agit d’une détection visuelle expérimentale par points caractéristiques, pas encore d’un suivi AR avec perspective 3D. Les seuils doivent être validés sur la plaque réelle, dans diverses conditions de lumière et d’angle. Les liens sont des pistes de recherche, et non des preuves directes de chaque détail historique.</p>
+</main></div>
+<script>
+const TARGET_DATA = "data:image/jpeg;base64,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";
+document.getElementById('targetImage').src=TARGET_DATA;
+const video=document.getElementById('video');
+let stream=null, scanTimer=null, cvLoading=null, detectorReady=false, referenceDescriptors=null, orb=null, matcher=null, consecutive=0;
+function status(message, detected=false){document.getElementById('statusText').textContent=message;document.getElementById('status').classList.toggle('detected',detected);document.getElementById('overlay').classList.toggle('show',detected)}
+function detail(message){document.getElementById('detailStatus').textContent=message}
+function loadOpenCV(){
+ if(cvLoading)return cvLoading;
+ cvLoading=new Promise((resolve,reject)=>{
+   let finished=false, runtimeSeen=false, poll=null, timeout=null, script=null;
+   const done=(err)=>{if(finished)return;finished=true;if(poll)clearInterval(poll);if(timeout)clearTimeout(timeout);if(err)reject(err);else resolve();};
+   window.Module=window.Module||{};
+   const previous=window.Module.onRuntimeInitialized;
+   window.Module.onRuntimeInitialized=function(){try{if(typeof previous==='function')previous()}catch(e){}runtimeSeen=true;checkReady()};
+   function checkReady(){
+    if(window.cv && typeof window.cv.then==='function'){
+      if(!window.__cvPromiseHandled){window.__cvPromiseHandled=true;window.cv.then(result=>{if(result)window.cv=result;runtimeSeen=true;checkReady()},e=>done(new Error('La promesse du moteur OpenCV a échoué: '+(e?.message||e))))}
+      return;
+    }
+    if(window.cv && window.cv.Mat && runtimeSeen)done();
+   }
+   script=document.createElement('script');script.async=true;script.src='https://docs.opencv.org/4.x/opencv.js';
+   script.onerror=()=>done(new Error('Le fichier OpenCV.js n’a pas pu être chargé.'));
+   script.onload=()=>{checkReady();};
+   poll=setInterval(checkReady,250);
+   timeout=setTimeout(()=>done(new Error('Le fichier a été chargé, mais le moteur WebAssembly n’a pas signalé son démarrage après 45 secondes.')),45000);
+   document.head.appendChild(script);
+ });
+ return cvLoading;
+}
+async function initDetector(){
+ const img=document.getElementById('targetImage');
+ await img.decode();
+ const c=document.createElement('canvas');c.width=img.naturalWidth;c.height=img.naturalHeight;c.getContext('2d').drawImage(img,0,0);
+ let rgba=cv.imread(c), refGray=new cv.Mat(), mask=new cv.Mat(), kp=new cv.KeyPointVector();
+ cv.cvtColor(rgba,refGray,cv.COLOR_RGBA2GRAY);
+ orb=new cv.ORB(1500);referenceDescriptors=new cv.Mat();
+ orb.detectAndCompute(refGray,mask,kp,referenceDescriptors);
+ rgba.delete();refGray.delete();mask.delete();kp.delete();
+ if(referenceDescriptors.empty())throw new Error('Aucun détail visuel exploitable trouvé dans l’image cible.');
+ matcher=new cv.BFMatcher(cv.NORM_HAMMING,false);
+ detectorReady=true;
+}
+async function startDetection(){
+ document.getElementById('startBtn').disabled=true;
+ try{
+  status('Activation de la caméra…');
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}},audio:false});
+  video.srcObject=stream;video.style.display='block';await video.play();document.getElementById('placeholder').style.display='none';
+  status('Caméra active · initialisation de la détection…');
+  try{
+   await loadOpenCV();
+   if(!detectorReady)await initDetector();
+   detail('Moteur de vision prêt. Placez toute la plaque dans le cadre, bien éclairée et aussi de face que possible.');
+   status('Recherche de la plaque…');
+   scanTimer=setInterval(scanFrame,600);
+  }catch(e){
+   status('La caméra fonctionne, mais le moteur de détection n’a pas démarré.');
+   detail((e?.message||String(e))+' Vous pouvez déjà consulter la transcription ci-dessous. Pour le diagnostic, les prochaines étapes seront de vérifier la console JavaScript et la réponse WebAssembly.');
+  }
+ }catch(e){
+  status('Caméra indisponible. Autorisez l’accès et utilisez le site en HTTPS.');
+  detail(e?.message||String(e));
+  document.getElementById('startBtn').disabled=false;
+ }
+}
+function scanFrame(){
+ if(!video.videoWidth||!detectorReady)return;
+ let rgba=null,gray=null,kp=null,desc=null,matches=null,mask=null;
+ try{
+  const c=document.createElement('canvas');const w=360,h=Math.round(w*video.videoHeight/video.videoWidth);c.width=w;c.height=h;c.getContext('2d').drawImage(video,0,0,w,h);
+  rgba=cv.imread(c);gray=new cv.Mat();cv.cvtColor(rgba,gray,cv.COLOR_RGBA2GRAY);
+  kp=new cv.KeyPointVector();desc=new cv.Mat();mask=new cv.Mat();orb.detectAndCompute(gray,mask,kp,desc);
+  if(desc.empty()){status('Recherche de la plaque… ajustez la distance et la lumière.');consecutive=0;return}
+  matches=new cv.DMatchVectorVector();matcher.knnMatch(referenceDescriptors,desc,matches,2);
+  let good=0;
+  for(let i=0;i<matches.size();i++){const pair=matches.get(i);if(pair.size()>=2){const a=pair.get(0),b=pair.get(1);if(a.distance<0.72*b.distance)good++;}}
+  if(good>=20)consecutive++;else consecutive=0;
+  if(consecutive>=2)status('Plaque probablement reconnue · '+good+' correspondances',true);
+  else status('Recherche en cours · '+good+' détails similaires');
+ }catch(e){status('Analyse visuelle en cours…');detail('Erreur d’analyse : '+(e?.message||String(e)))}
+ finally{if(matches)matches.delete();if(kp)kp.delete();if(desc)desc.delete();if(gray)gray.delete();if(rgba)rgba.delete();if(mask)mask.delete();}
+}
+function stopDetection(){
+ if(scanTimer){clearInterval(scanTimer);scanTimer=null}
+ if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+ video.srcObject=null;video.style.display='none';document.getElementById('placeholder').style.display='flex';document.getElementById('startBtn').disabled=false;consecutive=0;status('Arrêté. Activez la caméra pour recommencer.');
+}
+</script></body></html>
