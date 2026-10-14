@@ -19,7 +19,7 @@ Le moteur compile les images cibles listées dans `arTargets` dans le navigateur
 
 ## Carte et géolocalisation
 
-La carte utilise OpenStreetMap/Leaflet et demande l’autorisation de géolocalisation du navigateur. Les coordonnées du cimetière sont indicatives et doivent être vérifiées sur place. Les coordonnées précises des points à l’intérieur du cimetière ne sont pas encore renseignées. Le lien Google Maps fourni pour le site reste accessible depuis la carte.
+La carte utilise Leaflet, OpenStreetMap et une couche satellite Esri, et demande l’autorisation de géolocalisation du navigateur. Les coordonnées du cimetière sont indicatives et doivent être vérifiées sur place. Les coordonnées précises des points à l’intérieur du cimetière ne sont pas encore renseignées. Le lien Google Maps fourni pour le site reste accessible depuis la carte.
 
 ## Déploiement
 
