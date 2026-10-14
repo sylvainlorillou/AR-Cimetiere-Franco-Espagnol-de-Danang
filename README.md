@@ -1,15 +1,19 @@
 # Mémoire vivante — Cimetière franco-espagnol de Đà Nẵng
 
-Prototype web de détection visuelle de la plaque de l'ossuaire.
+Prototype web mobile-first pour tester la reconnaissance visuelle de la plaque de l'ossuaire.
 
-## État du prototype
-- Interface mobile-first.
-- Caméra arrière dans un navigateur HTTPS.
-- Comparaison expérimentale des détails visuels de la caméra avec la photo de référence via OpenCV.js.
-- Affichage de la transcription provisoire et de liens documentaires lorsqu'un ensemble de correspondances visuelles se maintient sur plusieurs images.
+## Contenu du dépôt
+- `index.html` : l'application complète. La photographie cible est intégrée dans le HTML ; aucun fichier image externe n'est requis.
+- Le site est statique et ne nécessite ni `package.json` ni étape de compilation. Vercel doit publier la racine du dépôt.
 
-## Déploiement
-Publier le contenu du dépôt sur Vercel. La page d'accueil est `index.html`. La photo cible `plaque_ossuaire.png` doit rester à côté de ce fichier. Pour tester la caméra, ouvrir la page en HTTPS et autoriser l'accès à la caméra.
+## Tester
+1. Ouvrir le site publié en HTTPS.
+2. Appuyer sur **Activer la caméra** et autoriser la caméra arrière.
+3. Présenter la plaque entière, assez près, de face et avec un éclairage régulier.
+4. La détection essaie de comparer des caractéristiques visuelles de la caméra à la photo cible ; la fiche se dévoile si un nombre suffisant de correspondances persiste.
 
 ## Limites
-La détection est un prototype et n'est pas un suivi AR calibré avec une pose 3D. Les seuils doivent être validés sur la plaque réelle. La transcription est provisoire et doit être relue sur place. Les liens sont des pistes documentaires, pas des preuves directes de toutes les affirmations.
+La reconnaissance est expérimentale et n'est pas encore un suivi AR avec pose 3D. Elle dépend de la lumière, de l'angle et de la netteté ; les seuils doivent être validés sur site. La transcription est provisoire. Les liens sont des pistes de recherche, et ne prouvent pas à eux seuls toutes les affirmations historiques.
+
+## Dépendance externe
+Le moteur OpenCV.js est chargé à la demande depuis `https://docs.opencv.org/4.x/opencv.js`. Une connexion au domaine est nécessaire pour la détection. Si le script charge mais que le moteur WebAssembly ne démarre pas, consulter la console JavaScript du navigateur pour obtenir l'erreur détaillée.
