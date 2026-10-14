@@ -53,7 +53,7 @@ const TARGET_IMAGE_DATA = "./plaque_ossuaire.jpg";
 document.getElementById('targetImage').src=TARGET_IMAGE_DATA;
 const video=document.getElementById('video');
 let stream=null, controller=null, mindLoading=null, scanning=false, targetLostTimer=null;
-const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets', DB_KEY='ossuaire-target-v2';
+const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets', DB_KEY='ossuaire-target-v3';
 function setStatus(message, detected=false){document.getElementById('statusText').textContent=message;document.getElementById('status').classList.toggle('detected',detected);document.getElementById('overlay').classList.toggle('show',detected)}
 function setDetail(message){document.getElementById('detailStatus').textContent=message}
 function wait(ms){return new Promise(resolve=>setTimeout(resolve,ms))}
@@ -138,8 +138,10 @@ async function startDetection(){
   setDetail('Suivi MindAR actif. Présentez toute la plaque, bien éclairée, sans trop de reflets.');
  }catch(e){
   console.error('MindAR start error:',e);
-  setStatus('Le démarrage de MindAR a échoué.');
-  setDetail((e&&e.message?e.message:String(e))+' Rechargez la page et réessayez. La transcription et les liens restent disponibles ci-dessous.');
+  const errorMessage=(e&&e.message?e.message:String(e));
+  setStatus('Échec MindAR : '+errorMessage.slice(0,68));
+  setDetail('Erreur exacte : '+errorMessage+' | La cible enregistrée précédemment a été invalidée. Réessayez après le redéploiement ; si l’erreur persiste, ce message précis permettra de corriger la bonne étape.');
+  mindLoading=null;
   if(controller){try{controller.dispose()}catch(_){}controller=null}
   btn.disabled=false;
  }
