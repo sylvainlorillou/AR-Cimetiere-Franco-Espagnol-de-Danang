@@ -55,7 +55,7 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
 <section class="page" id="mapPage">
   <div class="kicker" data-i18n="navMap">Carte & parcours</div><h2 data-i18n="mapTitle">Se repérer sur le site</h2>
   <p class="body-copy" data-i18n="mapIntro">La position du cimetière est indicative. Les repères internes et leurs coordonnées seront ajoutés après relevé sur place.</p>
-  <div class="maptools"><button class="primary" onclick="locateVisitor()" data-i18n="locateMe">Me localiser</button><a class="secondary" id="googleMapsLink" style="text-decoration:none;display:inline-flex;align-items:center" href="https://maps.app.goo.gl/ZcFSM41GCu8PSbxn7" target="_blank" rel="noopener" data-i18n="openGoogleMaps">Ouvrir dans Google Maps</a></div>
+  <div class="maptools"><button class="primary" onclick="locateVisitor()" data-i18n="locateMe">Me localiser</button><button class="secondary" id="mapBaseToggle" onclick="toggleMapBase()">Vue satellite</button><a class="secondary" id="googleMapsLink" style="text-decoration:none;display:inline-flex;align-items:center" href="https://maps.app.goo.gl/ZcFSM41GCu8PSbxn7" target="_blank" rel="noopener" data-i18n="openGoogleMaps">Ouvrir dans Google Maps</a></div>
   <div class="map-layout">
     <div>
       <div class="mapbox"><div id="leafletMap"></div><iframe id="mapFallback" title="Carte du cimetière" loading="lazy" src="https://www.openstreetmap.org/export/embed.html?bbox=108.214%2C16.118%2C108.226%2C16.127&layer=mapnik&marker=16.12233%2C108.22004"></iframe></div>
@@ -126,7 +126,7 @@ document.getElementById('aecvLogo').addEventListener('error',()=>{document.getEl
 document.querySelector('[data-i18n="brandSub"]').textContent=CONFIG.brand.name;
 const video=document.getElementById('video');
 let stream=null, controller=null, mindLoading=null, scanning=false, targetLostTimer=null, currentTargetIndex=0;
-let map=null, siteMarker=null, userMarker=null, leafletLoading=null, userLatLng=null;
+let map=null, siteMarker=null, userMarker=null, leafletLoading=null, userLatLng=null, streetLayer=null, satelliteLayer=null, satelliteOn=false;
 const DB_NAME='memoire-vivante-mindar', DB_STORE='compiled-targets';
 function t(key){return (CONFIG.ui[currentLanguage]&&CONFIG.ui[currentLanguage][key])||CONFIG.ui.fr[key]||key}
 function localized(obj){if(obj==null)return '';if(typeof obj==='string')return obj;return obj[currentLanguage]||obj.fr||obj.en||''}
@@ -294,13 +294,26 @@ async function initMap(){
   document.getElementById('mapFallback').style.display='none';document.getElementById('leafletMap').style.display='block';
   const lat=CONFIG.site.lat,lng=CONFIG.site.lng;
   map=L.map('leafletMap',{scrollWheelZoom:false}).setView([lat,lng],17);
-  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'}).addTo(map);
+  streetLayer=L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:20,attribution:'&copy; OpenStreetMap contributors'});
+  satelliteLayer=L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}',{maxZoom:19,attribution:'Tiles &copy; Esri — Source: Esri, Maxar, Earthstar Geographics, and the GIS User Community'});
+  streetLayer.addTo(map);
   siteMarker=L.marker([lat,lng]).addTo(map).bindPopup('<strong>'+t('sitePosition')+'</strong><br><a href="'+CONFIG.site.googleMapsUrl+'" target="_blank" rel="noopener">'+t('openGoogleMaps')+'</a>').openPopup();
+  syncMapBaseButton();
   setTimeout(()=>map.invalidateSize(),180);
  }catch(e){
   document.getElementById('leafletMap').style.display='none';document.getElementById('mapFallback').style.display='block';
   document.getElementById('mapStatus').textContent=t('mapStatus')+' '+(e.message||'');
  }
+}
+function toggleMapBase(){
+ if(!map||!streetLayer||!satelliteLayer)return;
+ if(satelliteOn){map.removeLayer(satelliteLayer);streetLayer.addTo(map);satelliteOn=false}
+ else{map.removeLayer(streetLayer);satelliteLayer.addTo(map);satelliteOn=true}
+ syncMapBaseButton();setTimeout(()=>map.invalidateSize(),120);
+}
+function syncMapBaseButton(){
+ const btn=document.getElementById('mapBaseToggle');
+ if(btn)btn.textContent=t(satelliteOn?'mapStreet':'mapSatellite');
 }
 function locateVisitor(){
  const out=document.getElementById('mapStatus');
