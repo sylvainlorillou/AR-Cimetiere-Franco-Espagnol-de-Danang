@@ -1,15 +1,16 @@
 # Mémoire vivante — Cimetière franco-espagnol de Đà Nẵng
 
-Prototype web de détection visuelle de la plaque de l'ossuaire.
+Prototype web mobile de détection expérimentale de la plaque de l’ossuaire.
 
-## État du prototype
-- Interface mobile-first.
-- Caméra arrière dans un navigateur HTTPS.
-- Comparaison expérimentale des détails visuels de la caméra avec la photo de référence via OpenCV.js.
-- Affichage de la transcription provisoire et de liens documentaires lorsqu'un ensemble de correspondances visuelles se maintient sur plusieurs images.
+## Fichiers
+- `index.html` : interface et logique de détection.
+- `plaque_ossuaire.jpg` : photographie de référence optimisée pour le prototype.
 
-## Déploiement
-Publier le contenu du dépôt sur Vercel. La page d'accueil est `index.html`. La photo cible `plaque_ossuaire.png` doit rester à côté de ce fichier. Pour tester la caméra, ouvrir la page en HTTPS et autoriser l'accès à la caméra.
+## Tester avec Vercel
+Publier le contenu du dépôt sur Vercel. La page d’accueil est `index.html`. Garder `index.html` et `plaque_ossuaire.jpg` dans le même dossier. Sur smartphone, ouvrir le site en HTTPS et autoriser la caméra arrière.
 
-## Limites
-La détection est un prototype et n'est pas un suivi AR calibré avec une pose 3D. Les seuils doivent être validés sur la plaque réelle. La transcription est provisoire et doit être relue sur place. Les liens sont des pistes documentaires, pas des preuves directes de toutes les affirmations.
+## Fonctionnement
+L’application charge OpenCV.js depuis le serveur officiel, attend que l’API soit disponible, puis compare des points caractéristiques ORB de la photo de référence et du flux caméra. Si suffisamment de correspondances se maintiennent sur plusieurs images, la fiche affiche la retranscription provisoire et les liens de recherche.
+
+## Limites et confidentialité historique
+La détection est expérimentale : les seuils nécessitent des essais sur la plaque réelle et le résultat n’est pas un suivi AR 3D stabilisé. La transcription doit être vérifiée sur place. Les liens fournis sont des pistes de recherche et ne prouvent pas directement chaque détail historique. Les documents en attente de publication officielle ne doivent pas être publiés tels quels sans autorisation.

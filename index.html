@@ -1,0 +1,124 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#172c2b">
+<title>Mémoire vivante — Plaque de l’ossuaire</title>
+<style>
+:root{--ink:#172c2b;--green:#284a43;--paper:#f5f1e8;--gold:#d9c39b;--muted:#68756c;--white:#fffdf8}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,Segoe UI,sans-serif}
+.app{max-width:480px;min-height:100dvh;margin:auto;background:var(--white);padding-bottom:76px;box-shadow:0 0 30px #172c2b10}
+header{background:var(--ink);color:white;padding:23px 20px} .eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--gold);font-weight:750}
+h1{font:500 27px/1.12 Georgia,serif;margin:10px 0 7px}header p{font-size:12px;line-height:1.5;color:#dce3dc;margin:0}
+main{padding:16px}.kicker{font-size:10px;letter-spacing:1.5px;text-transform:uppercase;color:var(--muted);font-weight:750}h2{font:500 22px Georgia,serif;margin:5px 0 13px}
+.camera{position:relative;background:#101b19;border-radius:14px;overflow:hidden;min-height:340px;aspect-ratio:3/4;color:white}
+video{position:absolute;width:100%;height:100%;inset:0;object-fit:cover}.frame{position:absolute;z-index:2;inset:19% 8%;border:1.5px solid #e5cc98;border-radius:5px;pointer-events:none;box-shadow:0 0 0 999px #10201c25}
+.status{position:absolute;top:10px;left:10px;right:10px;z-index:3;padding:10px 12px;border-radius:9px;background:#172c2be8;font-size:11px;font-weight:700;display:flex;gap:8px;align-items:center}
+.dot{width:8px;height:8px;border-radius:50%;background:#d7b778;flex:none}.status.detected .dot{background:#84d49a;box-shadow:0 0 0 4px #84d49a20}
+.overlay{position:absolute;z-index:4;left:9px;right:9px;bottom:9px;max-height:61%;overflow:auto;border:1px solid var(--gold);background:#fffdf8;color:var(--ink);border-radius:11px;padding:13px;display:none;box-shadow:0 6px 25px #0005}
+.overlay.show{display:block}.overlay h3{font:500 20px Georgia,serif;margin:0 0 8px}.transcription{font:15px/1.5 Georgia,serif;white-space:pre-line;margin:0}.overlay small{display:block;font-size:10px;line-height:1.4;color:var(--muted);margin-top:8px}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}button{border:0;border-radius:10px;padding:13px 10px;font-size:12px;font-weight:750;cursor:pointer}.primary{background:var(--green);color:white}.secondary{background:transparent;border:1px solid #c9c7ba;color:var(--ink)}
+.note{font-size:11px;line-height:1.5;color:var(--muted);margin:12px 1px}.card{border:1px solid #e5e0d6;border-radius:12px;padding:14px;margin-top:13px}.card h3{font:500 18px Georgia,serif;margin:0 0 9px}.links{display:grid;gap:8px}.links a{color:var(--green);border:1px solid #e5e0d6;border-radius:9px;padding:11px;text-decoration:none;font-size:12px;font-weight:700}.links span{display:block;color:var(--muted);font-weight:400;margin-top:3px}.reference{display:flex;gap:10px;align-items:center;margin-top:14px;border:1px solid #e6e0d6;border-radius:10px;padding:10px}.reference img{width:80px;height:58px;object-fit:cover;border-radius:5px}.reference b{font-size:12px}.reference small{display:block;color:var(--muted);font-size:10px;margin-top:3px}
+nav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:min(480px,100%);display:grid;grid-template-columns:repeat(2,1fr);background:var(--white);border-top:1px solid #e7e1d8;padding:9px 6px max(9px,env(safe-area-inset-bottom));z-index:8}.nav{background:transparent;color:#758078;font-size:10px;padding:4px}.nav b{font-size:18px;display:block;margin-bottom:3px;font-weight:400}.nav.active{color:var(--green);font-weight:750}.view{display:none}.view.active{display:block}.tag{display:inline-block;background:#e9efe8;color:#315747;border-radius:20px;padding:5px 8px;font-size:10px;font-weight:750;margin-bottom:8px}
+</style>
+<script>
+var Module = { onRuntimeInitialized: function(){ window.__opencvRuntimeReady = true; } };
+</script>
+<script async src="https://docs.opencv.org/4.x/opencv.js"></script>
+</head>
+<body><div class="app">
+<header><div class="eyebrow">Mémoire vivante · Đà Nẵng</div><h1>La mémoire gravée<br>dans la pierre.</h1><p>Visez la plaque de l’ossuaire pour afficher sa transcription et des pistes documentaires.</p></header>
+<main>
+<section class="view active" id="detect">
+<div class="kicker">Ancrage visuel · Ossuaire</div><h2>Détecter la plaque</h2>
+<div class="camera">
+<video id="video" autoplay playsinline muted></video>
+<div class="frame"></div>
+<div class="status" id="status"><span class="dot"></span><span id="statusText">Prêt. Activez la caméra pour commencer.</span></div>
+<div class="overlay" id="overlay"><span class="tag">PLAQUE PROBABLEMENT RECONNUE</span><h3>À la mémoire des combattants</h3><p class="transcription">✝
+
+À la mémoire des combattants
+Français et Espagnols
+de l’Expédition Rigault de Genouilly
+Morts en 1858-59-60
+et ensevelis en ces lieux
+
+R. I. P.</p><small>Transcription provisoire à vérifier sur la plaque originale.</small></div>
+</div>
+<div class="controls"><button class="primary" id="startBtn" onclick="startDetection()">Activer la caméra</button><button class="secondary" onclick="stopDetection()">Arrêter</button></div>
+<p class="note">La reconnaissance compare les détails visuels du flux caméra avec la photo de référence. Ce prototype est expérimental : les conditions de lumière, l’angle et la distance peuvent affecter le résultat. Il ne fournit pas encore un suivi AR 3D stable.</p>
+<div class="card"><h3>Pour approfondir</h3><div class="links">
+<a href="https://fr.wikipedia.org/wiki/Campagne_de_Cochinchine" target="_blank" rel="noopener">Campagne de Cochinchine<span>Repères historiques généraux à recouper avec des sources spécialisées.</span></a>
+<a href="https://gallica.bnf.fr/" target="_blank" rel="noopener">Gallica — Bibliothèque nationale de France<span>Recherche d’ouvrages, de presse et de documents anciens.</span></a>
+<a href="https://www.memoiredeshommes.sga.defense.gouv.fr/" target="_blank" rel="noopener">Mémoire des hommes<span>Portail officiel français de recherche historique et militaire.</span></a>
+</div></div>
+<div class="reference"><img src="plaque_ossuaire.jpg" alt="Plaque de l’ossuaire — référence"><div><b>Image cible de référence</b><small>Photographie transmise pour ce prototype</small></div></div>
+</section>
+<section class="view" id="about"><div class="kicker">Méthode</div><h2>À propos de la détection</h2><p class="note">La détection expérimentale utilise des points caractéristiques ORB et leurs correspondances dans l’image caméra. Après plusieurs images consécutives contenant suffisamment de correspondances, la fiche apparaît.</p><p class="note">La fiabilité devra être évaluée sur le site, avec plusieurs téléphones, distances, angles et conditions lumineuses. Pour une expérience patrimoniale robuste, une bibliothèque dédiée au suivi d’images pourra être préférable.</p><p class="note">La transcription est provisoire. Les liens proposés sont des pistes de recherche, et non des sources validant directement chaque élément historique.</p></section>
+</main>
+<nav><button class="nav active" data-view="detect" onclick="showView('detect')"><b>◎</b>Détection</button><button class="nav" data-view="about" onclick="showView('about')"><b>ⓘ</b>Méthode</button></nav></div>
+<script>
+let stream=null,scanTimer=null,cvLoading=null,orb=null,bf=null,refDesc=null,refGray=null,gray=null,detectedStreak=0;
+const video=document.getElementById('video');
+const $=id=>document.getElementById(id);
+const pause=ms=>new Promise(resolve=>setTimeout(resolve,ms));
+function setStatus(message,detected=false){$('statusText').textContent=message;$('status').classList.toggle('detected',detected);$('overlay').classList.toggle('show',detected)}
+function showView(id){document.querySelectorAll('.view').forEach(el=>el.classList.toggle('active',el.id===id));document.querySelectorAll('.nav').forEach(el=>el.classList.toggle('active',el.dataset.view===id))}
+function getCV(){if(window.cv)return window.cv;if(typeof cv!=='undefined')return cv;return null}
+async function waitForCV(){
+ if(cvLoading)return cvLoading;
+ cvLoading=(async()=>{
+  setStatus('Chargement et initialisation du moteur de vision…');
+  for(let i=0;i<240;i++){
+   let candidate=getCV();
+   if(candidate && typeof candidate.then==='function'){try{candidate=await candidate;window.cv=candidate}catch(e){}}
+   if(candidate && candidate.Mat){window.cv=candidate;return candidate}
+   await pause(250);
+  }
+  throw new Error('OpenCV a été téléchargé, mais cv.Mat reste indisponible. Le navigateur n’a pas terminé l’initialisation WebAssembly.');
+ })();
+ try{return await cvLoading}catch(e){cvLoading=null;throw e}
+}
+function loadImage(src){return new Promise((resolve,reject)=>{const im=new Image();im.onload=()=>resolve(im);im.onerror=()=>reject(new Error('Impossible de charger plaque_ossuaire.jpg. Vérifiez que le fichier est bien publié avec index.html.'));im.src=src})}
+async function startDetection(){
+ $('startBtn').disabled=true;
+ try{
+  const CV=await waitForCV();
+  setStatus('Préparation de la photo de référence…');
+  if(!orb){orb=new CV.ORB(1200);bf=new CV.BFMatcher(CV.NORM_HAMMING,false);gray=new CV.Mat()}
+  if(!refDesc){
+   const im=await loadImage('plaque_ossuaire.jpg');
+   const c=document.createElement('canvas');c.width=im.naturalWidth;c.height=im.naturalHeight;c.getContext('2d').drawImage(im,0,0);
+   const src=CV.imread(c);refGray=new CV.Mat();CV.cvtColor(src,refGray,CV.COLOR_RGBA2GRAY);src.delete();
+   refDesc=new CV.Mat();const keypoints=new CV.KeyPointVector(),mask=new CV.Mat();
+   orb.detectAndCompute(refGray,mask,keypoints,refDesc);keypoints.delete();mask.delete();
+   if(refDesc.empty()){throw new Error('Aucun détail visuel exploitable n’a été trouvé dans la photo cible.')}
+  }
+  stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:{ideal:'environment'},width:{ideal:960},height:{ideal:720}},audio:false});
+  video.srcObject=stream;video.style.display='block';await video.play();setStatus('Caméra active — pointez vers la plaque…');scanTimer=setInterval(()=>scanFrame(CV),500);
+ }catch(e){setStatus(e.message||'Erreur au démarrage de la détection.');$('startBtn').disabled=false}
+}
+function scanFrame(CV){
+ if(!video.videoWidth||!refDesc)return;
+ let image=null,kp=null,desc=null,matches=null,mask=null;
+ try{
+  const c=document.createElement('canvas');c.width=320;c.height=Math.max(180,Math.round(320*video.videoHeight/video.videoWidth));c.getContext('2d').drawImage(video,0,0,c.width,c.height);
+  image=CV.imread(c);CV.cvtColor(image,gray,CV.COLOR_RGBA2GRAY);
+  kp=new CV.KeyPointVector();desc=new CV.Mat();mask=new CV.Mat();orb.detectAndCompute(gray,mask,kp,desc);
+  matches=new CV.DMatchVectorVector();bf.knnMatch(refDesc,desc,matches,2);
+  let good=0;
+  for(let i=0;i<matches.size();i++){const m=matches.get(i);if(m.size()>=2){const a=m.get(0),b=m.get(1);if(a.distance<0.74*b.distance)good++}}
+  if(good>=13)detectedStreak++;else detectedStreak=Math.max(0,detectedStreak-1);
+  if(detectedStreak>=3)setStatus('Plaque probablement reconnue · '+good+' correspondances',true);
+  else setStatus('Recherche de la plaque… '+good+' correspondances');
+ }catch(e){setStatus('Erreur de détection : '+(e.message||'API OpenCV indisponible'));stopDetection()}
+ finally{if(matches)matches.delete();if(mask)mask.delete();if(kp)kp.delete();if(desc)desc.delete();if(image)image.delete()}
+}
+function stopDetection(){
+ if(scanTimer){clearInterval(scanTimer);scanTimer=null}
+ if(stream){stream.getTracks().forEach(t=>t.stop());stream=null}
+ video.srcObject=null;video.style.display='none';detectedStreak=0;$('overlay').classList.remove('show');$('startBtn').disabled=false;
+ if(refDesc)setStatus('Caméra arrêtée. Vous pouvez réessayer.');else setStatus('Caméra arrêtée.');
+}
+</script></body></html>
