@@ -489,6 +489,7 @@ window.MEMOIRE_CONFIG = {
   C.arTargets.push({
     id: "epitaphe-correard-1859",
     image: "./plaque_correard.jpg",
+    reconstructionOverlay: "./correard_overlay.svg",
     sourceLanguage: "fr",
     title: {
       fr: "L’épitaphe de Charles Alexandre Corréard",
@@ -661,4 +662,14 @@ window.MEMOIRE_CONFIG = {
       ru: "Французский адмирал; его имя указано на табличке оссуария."
     }
   });
+})();
+
+// Labels for the optional live inscription reconstruction overlay.
+(() => {
+ const U = window.MEMOIRE_CONFIG.ui;
+ Object.assign(U.fr, {showRestoration:"Afficher la restitution",hideRestoration:"Masquer la restitution"});
+ Object.assign(U.vi, {showRestoration:"Hiện phần phục dựng",hideRestoration:"Ẩn phần phục dựng"});
+ Object.assign(U.en, {showRestoration:"Show reconstruction",hideRestoration:"Hide reconstruction"});
+ Object.assign(U.es, {showRestoration:"Mostrar la reconstrucción",hideRestoration:"Ocultar la reconstrucción"});
+ Object.assign(U.ru, {showRestoration:"Показать реконструкцию",hideRestoration:"Скрыть реконструкцию"});
 })();
