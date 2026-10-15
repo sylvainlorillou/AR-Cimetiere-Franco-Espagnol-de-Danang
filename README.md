@@ -18,6 +18,7 @@ Application patrimoniale mobile-first consacrée au cimetière franco-espagnol Y
 - `plaque_ossuaire.jpg` : première cible AR, plaque de l’ossuaire.
 - `plaque_treille.jpg` : deuxième cible AR, plaque du monument érigé en 1898.
 - `plaque_correard.jpg` : troisième cible AR, épitaphe de Charles Alexandre Corréard. Le repère a été remplacé par une image mieux définie, recadrée sur les ~72 % supérieurs de la pierre pour privilégier le nom et les lignes les plus distinctives. Seul le contraste/la netteté et le cadrage ont été ajustés ; aucun caractère manquant n'a été reconstitué dans l'image cible.
+- `correard_overlay.svg` : calque transparent issu du PNG de restitution fourni pour l’épitaphe. Il est superposé en perspective sur la vidéo lorsque Corréard est reconnu, avec une position calibrée pour aligner le nom et les lignes visibles.
 
 ## Ajouter un marqueur AR
 
@@ -69,6 +70,15 @@ Site statique : publier la racine du dépôt sur Vercel, sans étape de compilat
 - The current compiled target set is held in JavaScript memory for the active visit and persisted in IndexedDB under `targetSetVersion`. Increment `targetSetVersion` whenever a target image or target ordering/content is changed, so old cached target data cannot be reused.
 - MindAR is configured with `warmupTolerance: 3` and `missTolerance: 18`. The higher miss tolerance keeps the tracker from declaring a target lost after only a few missed frames, which can help with unstable images on weathered stone. The visitor overlay additionally remains visible for five seconds after the tracker reports a lost target. These settings do not increase the number of visual features in an image; they cannot by themselves make a weak marker detectable or recover details physically missing from an inscription.
 - Background preparation does not ask for or start camera access; the camera is activated only after the visitor presses the start button. If the automatic preparation fails, starting the camera will try again and show the error.
+
+
+## Live AR inscription reconstruction
+
+The Corréard epitaph uses an optional transparent SVG layer projected onto the live camera image using the MindAR projection matrix and tracked marker pose. A visitor-facing toggle lets the user show or hide this reconstruction. The overlay is limited to the Corréard marker; the ossuary and 1898 monument plaques are unchanged.
+
+The SVG is derived from the supplied reconstruction PNG: the surrounding transparent canvas and letter silhouettes are retained; no missing wording is invented. The current vertical offset is a first calibration against the word “CORRÉARD” and the photographed marker crop, so it should be checked and fine-tuned on the actual stone and target handset. The layer freezes with the last good camera pose during the existing five-second marker-loss grace period, then hides with the card.
+
+For a future inscription, add a transparent PNG/SVG restoration, configure the relevant target with a `reconstructionOverlay` property, and calibrate the overlay's scale and offsets against its marker image. Do not add an overlay for plaques whose restoration is not ready or whose original text remains uncertain.
 
 ## Liens
 
