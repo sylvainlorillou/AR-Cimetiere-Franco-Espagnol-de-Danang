@@ -59,6 +59,15 @@ Site statique : publier la racine du dépôt sur Vercel, sans étape de compilat
 - Ne pas publier de documents de travail non publiés ou soumis à restriction sans autorisation.
 - Créditer les sources et images selon les conditions de réutilisation applicables.
 
+
+## AR performance and interaction
+
+- The start/stop camera controls are displayed immediately above the camera frame and remain sticky while moving through the AR section.
+- When a marker is lost, its detected content stays visible for five seconds before the overlay is dismissed. If the marker is reacquired during this grace period, the timer is cancelled.
+- After the page finishes loading, MindAR and the complete image-target set are warmed up in the background. The compiler job is shared with any user-triggered camera start to avoid duplicate compilation.
+- The current compiled target set is held in JavaScript memory for the active visit and persisted in IndexedDB under `targetSetVersion`. Increment `targetSetVersion` whenever a target image or target ordering/content is changed, so old cached target data cannot be reused.
+- Background preparation does not ask for or start camera access; the camera is activated only after the visitor presses the start button. If the automatic preparation fails, starting the camera will try again and show the error.
+
 ## Liens
 
 - AECV : https://aecv-mientrung.com/
