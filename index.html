@@ -237,6 +237,7 @@ async function preloadArTargets(){
   return true;
  })().catch(error=>{
   console.warn('[AECV AR] Background preloading failed; the camera button can retry:',error);
+  mindLoading=null;
   return false;
  }).finally(()=>{preloadPromise=null});
  return preloadPromise;
