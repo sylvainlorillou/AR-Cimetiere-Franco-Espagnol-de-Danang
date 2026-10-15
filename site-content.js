@@ -673,3 +673,13 @@ window.MEMOIRE_CONFIG = {
  Object.assign(U.es, {showRestoration:"Mostrar la reconstrucción",hideRestoration:"Ocultar la reconstrucción"});
  Object.assign(U.ru, {showRestoration:"Показать реконструкцию",hideRestoration:"Скрыть реконструкцию"});
 })();
+
+// Full-screen camera controls, translated with the navigation language.
+(() => {
+ const U = window.MEMOIRE_CONFIG.ui;
+ Object.assign(U.fr, {enterFullscreen:"Caméra plein écran",exitFullscreen:"Quitter le plein écran"});
+ Object.assign(U.vi, {enterFullscreen:"Toàn màn hình camera",exitFullscreen:"Thoát toàn màn hình"});
+ Object.assign(U.en, {enterFullscreen:"Full-screen camera",exitFullscreen:"Exit full screen"});
+ Object.assign(U.es, {enterFullscreen:"Cámara a pantalla completa",exitFullscreen:"Salir de pantalla completa"});
+ Object.assign(U.ru, {enterFullscreen:"Камера на весь экран",exitFullscreen:"Выйти из полноэкранного режима"});
+})();
