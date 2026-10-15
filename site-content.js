@@ -2,8 +2,9 @@
  * FICHIER DE CONTENU — Mémoire vivante / AECV
  * Pour ajouter un nouveau marqueur AR :
  * 1) déposer sa photo cible à la racine du dépôt, par ex. "plaque_2.jpg"
- * 2) ajouter un objet à AR_TARGETS avec id, image, textes FR/EN/VI, et links.
- * 3) augmenter TARGET_SET_VERSION pour forcer la recompilation de la liste de cibles.
+ * 2) ajouter un objet à MEMOIRE_CONFIG.arTargets avec id, image, textes FR/VI/EN/ES/RU,
+ *    sourceLanguage, inscription, traductions, note et liens documentaires.
+ * 3) augmenter targetSetVersion pour forcer la recompilation de la liste de cibles.
  * Ne pas publier de documents d'archives confidentiels ou non autorisés.
  */
 window.MEMOIRE_CONFIG = {
