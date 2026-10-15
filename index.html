@@ -80,7 +80,7 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
     <div class="placeholder" id="placeholder"><div><div style="font-size:40px;margin-bottom:12px">◎</div><h3 data-i18n="cameraTitle">Visez la plaque de l’ossuaire</h3><p data-i18n="cameraIntro">Présentez la plaque entière, plutôt de face, avec un éclairage régulier.</p></div></div>
     <div class="frame"></div>
     <img id="reconstructionLayer" class="reconstruction-layer" src="./correard_overlay.svg" alt="" aria-hidden="true">
-    <button id="fullscreenToggle" class="fullscreen-toggle secondary" type="button" onclick="toggleCameraFullscreen()" data-i18n="enterFullscreen">Plein écran</button>
+    <button id="fullscreenToggle" class="fullscreen-toggle secondary" type="button" hidden onclick="toggleCameraFullscreen()" data-i18n="enterFullscreen">Plein écran</button>
     <button id="reconstructionToggle" class="reconstruction-toggle secondary" type="button" hidden onclick="toggleRestoration()" data-i18n="hideRestoration">Masquer la restitution</button>
     <div class="status" id="status"><span class="dot"></span><span id="statusText">Prêt. Autorisez la caméra pour démarrer.</span></div>
     <div class="overlay" id="overlay"><span class="pill" data-i18n="targetFound">Plaque reconnue · fiche ouverte</span><h3 id="overlayTitle"></h3><p id="overlayDescription"></p><button class="secondary" style="margin-top:10px" onclick="document.getElementById('targetDetails').scrollIntoView({behavior:'smooth',block:'start'})" data-i18n="transcript">Transcription de la plaque</button></div>
@@ -517,7 +517,7 @@ async function startDetection(){
  try{
   setStatus(t('cameraActive'));setDetail(t('cameraActive'));
   stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});
-  video.srcObject=stream;video.style.display='block';await video.play();document.getElementById('placeholder').style.display='none';
+  video.srcObject=stream;video.style.display='block';await video.play();document.getElementById('placeholder').style.display='none';document.getElementById('fullscreenToggle').hidden=false;
   setStatus(t('loadingMindar'));setDetail(t('loadingMindar'));
   await loadMindAR();
   const targetBuffer=await getCompiledTarget();
@@ -542,7 +542,7 @@ async function startDetection(){
           targetLostTimer=setTimeout(()=>{
             targetLostTimer=null;
             document.getElementById('overlay').classList.remove('show');
-            hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;resetOverlaySmoothing();resetOverlaySmoothing();
+            hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;resetOverlaySmoothing();
             setStatus(t('targetLost'));
           },5000);
         }
@@ -560,14 +560,14 @@ async function startDetection(){
   setStatus(t('errorPrefix')+msg.slice(0,58));setDetail(t('errorPrefix')+msg);
   mindLoading=null;if(controller){try{controller.dispose()}catch(_){}controller=null}
   if(stream){stream.getTracks().forEach(track=>track.stop());stream=null}
-  video.srcObject=null;video.style.display='none';document.getElementById('placeholder').style.display='flex';hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;resetOverlaySmoothing();btn.disabled=false;
+  video.srcObject=null;video.style.display='none';document.getElementById('placeholder').style.display='flex';document.getElementById('fullscreenToggle').hidden=true;hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;resetOverlaySmoothing();btn.disabled=false;
  }
 }
 function stopDetection(){
  scanning=false;if(targetLostTimer){clearTimeout(targetLostTimer);targetLostTimer=null}
  if(controller){try{controller.dispose()}catch(_){}controller=null}
  if(stream){stream.getTracks().forEach(track=>track.stop());stream=null}
- video.srcObject=null;video.style.display='none';document.getElementById('placeholder').style.display='flex';document.getElementById('startBtn').disabled=false;document.getElementById('overlay').classList.remove('show');hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;
+ video.srcObject=null;video.style.display='none';document.getElementById('placeholder').style.display='flex';document.getElementById('startBtn').disabled=false;document.getElementById('fullscreenToggle').hidden=true;document.getElementById('overlay').classList.remove('show');hideRestorationOverlay(true);lastTargetMatrix=null;lastTargetIndex=-1;resetOverlaySmoothing();
  setStatus(t('stopped'));setDetail(t('stopped'));
 }
 
