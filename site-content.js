@@ -466,3 +466,13 @@ window.MEMOIRE_CONFIG = {
   C.arTargets[1].translationNotes.fr = "Traduction proposée à partir de la transcription développée fournie pour ce projet. À vérifier sur la plaque originale.";
   C.arTargets[1].translations.vi = C.arTargets[1].translations.vi.replace("Reverend Father Laurent", "Linh mục Laurent");
 })();
+
+// Navigation text now reflects both AR markers available in the visitor app.
+(() => {
+  const U = window.MEMOIRE_CONFIG.ui;
+  Object.assign(U.fr, {firstStop:"Les deux plaques commémoratives", firstStopText:"Deux repères peuvent être reconnus par la caméra : la plaque de l’ossuaire et la plaque du monument érigé en 1898.", cameraTitle:"Visez une plaque commémorative", cameraIntro:"Présentez la plaque entière, plutôt de face, avec un éclairage régulier. La première préparation des cibles peut prendre un moment."});
+  Object.assign(U.vi, {firstStop:"Hai bia tưởng niệm", firstStopText:"Camera có thể nhận diện hai điểm: bia nhà lưu cốt và bia của đài tưởng niệm dựng năm 1898.", cameraTitle:"Hướng camera vào bia tưởng niệm", cameraIntro:"Đưa toàn bộ tấm bia vào khung hình, càng chính diện càng tốt và đủ ánh sáng. Lần chuẩn bị các mục tiêu đầu tiên có thể mất một lúc."});
+  Object.assign(U.en, {firstStop:"Two commemorative plaques", firstStopText:"The camera can recognize two markers: the ossuary plaque and the plaque for the monument erected in 1898.", cameraTitle:"Point at a commemorative plaque", cameraIntro:"Keep the whole plaque in view, preferably face-on, with even lighting. Preparing the targets for the first time may take a little while."});
+  Object.assign(U.es, {firstStop:"Dos placas conmemorativas", firstStopText:"La cámara puede reconocer dos hitos: la placa del osario y la placa del monumento erigido en 1898.", cameraTitle:"Enfoca una placa conmemorativa", cameraIntro:"Mantén la placa completa dentro del encuadre, preferiblemente de frente y con luz uniforme. La preparación inicial de las imágenes puede tardar."});
+  Object.assign(U.ru, {firstStop:"Две памятные таблички", firstStopText:"Камера распознаёт два объекта: табличку оссуария и табличку памятника, возведённого в 1898 году.", cameraTitle:"Наведите камеру на памятную табличку", cameraIntro:"Полностью поместите табличку в кадр, желательно прямо и при равномерном освещении. Первичная подготовка изображений может занять некоторое время."});
+})();
