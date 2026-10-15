@@ -264,7 +264,7 @@ function renderPeople(){
   const roleLabel=document.createElement('span');roleLabel.className='pill';roleLabel.textContent=t('peopleRoleLabel');card.appendChild(roleLabel);
   const role=document.createElement('p');role.className='person-role';role.textContent=localized(person.role);card.appendChild(role);
   const pending=document.createElement('div');pending.className='person-pending';
-  const bio=document.createElement('div');const bioTitle=document.createElement('strong');bioTitle.textContent=t('methodTitle');bio.appendChild(bioTitle);bio.appendChild(document.createTextNode(t('bioPending')));
+  const bio=document.createElement('div');const bioTitle=document.createElement('strong');bioTitle.textContent=t('biographyLabel');bio.appendChild(bioTitle);bio.appendChild(document.createTextNode(t('bioPending')));
   const portrait=document.createElement('div');portrait.style.marginTop='7px';const portraitTitle=document.createElement('strong');portraitTitle.textContent=t('portraitPending');portrait.appendChild(portraitTitle);
   pending.appendChild(bio);pending.appendChild(portrait);card.appendChild(pending);container.appendChild(card);
  });
