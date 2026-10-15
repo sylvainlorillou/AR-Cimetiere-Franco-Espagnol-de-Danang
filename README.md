@@ -86,3 +86,10 @@ For a future inscription, add a transparent PNG/SVG restoration, configure the r
 - Documentation MindAR : https://hiukim.github.io/mind-ar-js-doc/
 - Carte Google Maps du cimetière : https://maps.app.goo.gl/ZcFSM41GCu8PSbxn7
 - Carte indicative : https://mapcarta.com/N6512888885
+
+
+### Overlay stability and full-screen camera
+
+The live Corréard inscription layer now applies temporal smoothing to its projected four-corner quadrilateral in screen coordinates (EMA alpha 0.16). This attenuates scale and perspective flutter from small frame-to-frame pose variations while leaving MindAR's own tracking and the two earlier targets unchanged. The smoothing state resets on target loss, target switch, resize, and full-screen layout changes.
+
+The camera view includes a full-screen control. It uses the browser Fullscreen API when supported, with a fixed-viewport CSS fallback for browsers that do not expose element fullscreen. The control labels are localized in French, Vietnamese, English, Spanish, and Russian.
