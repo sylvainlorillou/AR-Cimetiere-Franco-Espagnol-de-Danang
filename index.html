@@ -442,7 +442,7 @@ function applyReconstructionOverlay(index,matrix){
  if(destCorners.some(pt=>!pt||!Number.isFinite(pt.x)||!Number.isFinite(pt.y)))return;
  const H=solveHomography(sourceCorners,destCorners);
  const cssMatrix=[H[0],H[3],0,H[6],H[1],H[4],0,H[7],0,0,1,0,H[2],H[5],0,1];
- layer.src=target.reconstructionOverlay;
+ if(layer.getAttribute('src')!==target.reconstructionOverlay)layer.src=target.reconstructionOverlay;
  layer.style.width=sourceWidth+'px';layer.style.height=sourceHeight+'px';
  layer.style.transform='matrix3d('+cssMatrix.map(n=>Number(n.toFixed(7))).join(',')+')';
  layer.style.display='block';
