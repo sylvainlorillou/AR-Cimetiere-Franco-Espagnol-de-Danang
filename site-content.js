@@ -483,7 +483,7 @@ window.MEMOIRE_CONFIG = {
 // This helps feature extraction but does not "restore" or invent missing engraving details.
 (() => {
   const C = window.MEMOIRE_CONFIG;
-  C.targetSetVersion = "aecv-mindar-2026-10-v3";
+  C.targetSetVersion = "aecv-mindar-2026-10-v4";
 
   const corrText = "Ci-gît Corréard (Charles Alexandre)\nCapitaine en 1er rang d’Artillerie de Marine\nDécédé à Tourane le 21 mai 1859";
   C.arTargets.push({
