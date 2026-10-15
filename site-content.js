@@ -477,3 +477,188 @@ window.MEMOIRE_CONFIG = {
   Object.assign(U.es, {firstStop:"Dos placas conmemorativas", firstStopText:"La cámara puede reconocer dos hitos: la placa del osario y la placa del monumento erigido en 1898.", cameraTitle:"Enfoca una placa conmemorativa", cameraIntro:"Mantén la placa completa dentro del encuadre, preferiblemente de frente y con luz uniforme. La preparación inicial de las imágenes puede tardar."});
   Object.assign(U.ru, {firstStop:"Две памятные таблички", firstStopText:"Камера распознаёт два объекта: табличку оссуария и табличку памятника, возведённого в 1898 году.", cameraTitle:"Наведите камеру на памятную табличку", cameraIntro:"Полностью поместите табличку в кадр, желательно прямо и при равномерном освещении. Первичная подготовка изображений может занять некоторое время."});
 })();
+
+// Third AR inscription: the epitaph of Charles Alexandre Corréard.
+// The target image uses a lightly contrast/sharpness-adjusted copy of the visitor's photograph.
+// This helps feature extraction but does not "restore" or invent missing engraving details.
+(() => {
+  const C = window.MEMOIRE_CONFIG;
+  C.targetSetVersion = "aecv-mindar-2026-10-v3";
+
+  const corrText = "Ci-gît Corréard (Charles Alexandre)\nCapitaine en 1er rang d’Artillerie de Marine\nDécédé à Tourane le 21 mai 1859";
+  C.arTargets.push({
+    id: "epitaphe-correard-1859",
+    image: "./plaque_correard.jpg",
+    sourceLanguage: "fr",
+    title: {
+      fr: "L’épitaphe de Charles Alexandre Corréard",
+      vi: "Bia mộ Charles Alexandre Corréard",
+      en: "The epitaph of Charles Alexandre Corréard",
+      es: "El epitafio de Charles Alexandre Corréard",
+      ru: "Эпитафия Шарля Александра Корреара"
+    },
+    description: {
+      fr: "Cette épitaphe identifie Charles Alexandre Corréard comme capitaine d’artillerie de marine et indique sa mort à Tourane le 21 mai 1859.",
+      vi: "Bia mộ xác định Charles Alexandre Corréard là đại úy pháo binh hải quân và ghi ông qua đời tại Tourane ngày 21 tháng 5 năm 1859.",
+      en: "The epitaph identifies Charles Alexandre Corréard as a captain in the Marine Artillery and records his death in Tourane on 21 May 1859.",
+      es: "El epitafio identifica a Charles Alexandre Corréard como capitán de Artillería de Marina y señala que murió en Tourane el 21 de mayo de 1859.",
+      ru: "В эпитафии Шарль Александр Корреар назван капитаном морской артиллерии; указано, что он умер в Туране 21 мая 1859 года."
+    },
+    inscription: corrText,
+    translations: {
+      fr: corrText,
+      vi: "Nơi đây an nghỉ Charles Alexandre Corréard, đại úy hạng nhất của pháo binh hải quân. Ông qua đời tại Tourane ngày 21 tháng 5 năm 1859.",
+      en: "Here lies Charles Alexandre Corréard, Captain first class of the Marine Artillery. He died in Tourane on 21 May 1859.",
+      es: "Aquí yace Charles Alexandre Corréard, capitán de primera clase de Artillería de Marina. Falleció en Tourane el 21 de mayo de 1859.",
+      ru: "Здесь покоится Шарль Александр Корреар, капитан первого ранга морской артиллерии. Он умер в Туране 21 мая 1859 года."
+    },
+    translationNotes: {
+      fr: "Le texte original est en français.",
+      vi: "Bản dịch tham khảo từ nguyên văn tiếng Pháp; tên riêng được giữ nguyên.",
+      en: "Translation from the original French inscription; the person's name is preserved.",
+      es: "Traducción de la inscripción francesa original; se conserva el nombre propio.",
+      ru: "Перевод с оригинальной французской надписи; имя сохранено."
+    },
+    note: {
+      fr: "Le relevé est difficile à lire car la pierre est très usée. La transcription complète est celle fournie pour le projet ; les parties moins lisibles devront être revérifiées sur place.",
+      vi: "Bề mặt bia đã mòn nên khó đọc. Bản chép đầy đủ được cung cấp cho dự án; các đoạn khó đọc cần được kiểm tra lại tại chỗ.",
+      en: "The stone is heavily weathered and difficult to read. This expanded transcription was supplied for the project; less legible portions should be checked on site.",
+      es: "La piedra está muy erosionada y resulta difícil de leer. La transcripción desarrollada fue facilitada para el proyecto; las partes menos legibles deben comprobarse in situ.",
+      ru: "Камень сильно выветрился, поэтому надпись трудно прочитать. Полная транскрипция предоставлена для проекта; менее разборчивые части следует перепроверить на месте."
+    },
+    personLinks: [
+      { text: "Corréard (Charles Alexandre)", personId: "correard" }
+    ],
+    translationPersonLinks: {
+      vi: [{ text: "Charles Alexandre Corréard", personId: "correard" }],
+      en: [{ text: "Charles Alexandre Corréard", personId: "correard" }],
+      es: [{ text: "Charles Alexandre Corréard", personId: "correard" }],
+      ru: [{ text: "Шарль Александр Корреар", personId: "correard" }]
+    },
+    latitude: null,
+    longitude: null,
+    links: [
+      {
+        label: {
+          fr: "Service historique de la Défense — répertoire des officiers coloniaux",
+          vi: "Service historique de la Défense — danh mục sĩ quan thuộc địa",
+          en: "French Defence Historical Service — colonial officers inventory",
+          es: "Servicio Histórico de Defensa — repertorio de oficiales coloniales",
+          ru: "Историческая служба Министерства обороны Франции — список колониальных офицеров"
+        },
+        url: "https://www.servicehistorique.sga.defense.gouv.fr/sites/default/files/2019-10/SHDGR_INV_GR3YE_OFFICIERS_COLONIALE_1900.pdf"
+      },
+      {
+        label: {
+          fr: "Repère d’inventaire du dossier de la Légion d’honneur (LH/594/70)",
+          vi: "Thông tin danh mục hồ sơ Bắc Đẩu Bội tinh (LH/594/70)",
+          en: "Inventory entry for the Légion d’honneur file (LH/594/70)",
+          es: "Referencia de inventario del expediente de la Legión de Honor (LH/594/70)",
+          ru: "Каталожная запись дела ордена Почётного легиона (LH/594/70)"
+        },
+        url: "https://es.geneanet.org/registros/view/524061"
+      }
+    ]
+  });
+
+  // Link names in inscription text to the corresponding person entries.
+  C.arTargets[0].personLinks = [
+    { text: "Rigault de Genouilly", personId: "rigault" }
+  ];
+  C.arTargets[0].translationPersonLinks = {
+    vi: [{ text: "Rigault de Genouilly", personId: "rigault" }],
+    en: [{ text: "Rigault de Genouilly", personId: "rigault" }],
+    es: [{ text: "Rigault de Genouilly", personId: "rigault" }],
+    ru: [{ text: "Риго де Женуйи", personId: "rigault" }]
+  };
+  C.arTargets[1].personLinks = [
+    { text: "Capitaine Treille", personId: "treille" },
+    { text: "Monsieur Doumer", personId: "doumer" },
+    { text: "Monsieur Bichot", personId: "bichot" },
+    { text: "Monsieur Haüser", personId: "hauser" },
+    { text: "Révérend Père Laurent", personId: "laurent" }
+  ];
+  C.arTargets[1].translationPersonLinks = {
+    vi: [
+      { text: "Đại úy Treille", personId: "treille" },
+      { text: "Ông Doumer", personId: "doumer" },
+      { text: "Ông Bichot", personId: "bichot" },
+      { text: "Ông Haüser", personId: "hauser" },
+      { text: "Linh mục Laurent", personId: "laurent" }
+    ],
+    en: [
+      { text: "Captain Treille", personId: "treille" },
+      { text: "Monsieur Doumer", personId: "doumer" },
+      { text: "Monsieur Bichot", personId: "bichot" },
+      { text: "Monsieur Haüser", personId: "hauser" },
+      { text: "Reverend Father Laurent", personId: "laurent" }
+    ],
+    es: [
+      { text: "capitán Treille", personId: "treille" },
+      { text: "Monsieur Doumer", personId: "doumer" },
+      { text: "Monsieur Bichot", personId: "bichot" },
+      { text: "Monsieur Haüser", personId: "hauser" },
+      { text: "Reverendo Padre Laurent", personId: "laurent" }
+    ],
+    ru: [
+      { text: "Трейль", personId: "treille" },
+      { text: "Думер", personId: "doumer" },
+      { text: "Бишо", personId: "bichot" },
+      { text: "Haüser", personId: "hauser" },
+      { text: "Лоран", personId: "laurent" }
+    ]
+  };
+
+  C.people.push({
+    id: "correard",
+    name: "Charles Alexandre Corréard",
+    role: {
+      fr: "Capitaine en 1er rang d’Artillerie de Marine ; décédé à Tourane le 21 mai 1859 (épitaphe du cimetière).",
+      vi: "Đại úy pháo binh hải quân; qua đời tại Tourane ngày 21 tháng 5 năm 1859 (theo bia mộ).",
+      en: "Captain first class, Marine Artillery; died in Tourane on 21 May 1859 (according to the cemetery epitaph).",
+      es: "Capitán de primera clase de Artillería de Marina; falleció en Tourane el 21 de mayo de 1859 (según el epitafio).",
+      ru: "Капитан первого ранга морской артиллерии; умер в Туране 21 мая 1859 года (по надписи на надгробии)."
+    },
+    bio: {
+      fr: "Charles Alexandre Corréard naît à Paris le 15 décembre 1820. Officier d’artillerie, il est chevalier de la Légion d’honneur à compter du 29 avril 1855. L’inventaire du Service historique de la Défense répertorie un Charles Alexandre Corréard, né à cette date, capitaine dans l’artillerie. Son épitaphe à Đà Nẵng indique sa mort à Tourane le 21 mai 1859.",
+      vi: "Charles Alexandre Corréard sinh tại Paris ngày 15 tháng 12 năm 1820. Ông là sĩ quan pháo binh và được phong tước Hiệp sĩ Bắc Đẩu Bội tinh ngày 29 tháng 4 năm 1855. Danh mục của Cơ quan Lưu trữ Lịch sử Quốc phòng Pháp ghi nhận Charles Alexandre Corréard, sinh ngày này, cấp đại úy pháo binh. Bia mộ tại Đà Nẵng ghi ông qua đời ở Tourane ngày 21 tháng 5 năm 1859.",
+      en: "Charles Alexandre Corréard was born in Paris on 15 December 1820. An artillery officer, he was made a Chevalier of the Légion d’honneur on 29 April 1855. The French Defence Historical Service inventory lists a Charles Alexandre Corréard born on that date, a captain in the artillery. His epitaph in Đà Nẵng records his death in Tourane on 21 May 1859.",
+      es: "Charles Alexandre Corréard nació en París el 15 de diciembre de 1820. Oficial de artillería, fue nombrado caballero de la Legión de Honor el 29 de abril de 1855. El inventario del Servicio Histórico de Defensa francés registra a un Charles Alexandre Corréard nacido en esa fecha y capitán de artillería. Su epitafio en Đà Nẵng señala su fallecimiento en Tourane el 21 de mayo de 1859.",
+      ru: "Шарль Александр Корреар родился в Париже 15 декабря 1820 года. Будучи артиллерийским офицером, 29 апреля 1855 года он был удостоен звания кавалера ордена Почётного легиона. В описи Исторической службы Министерства обороны Франции указан Шарль Александр Корреар, родившийся в эту дату и служивший капитаном артиллерии. Надпись на его эпитафии в Дананге сообщает, что он умер в Туране 21 мая 1859 года."
+    },
+    sources: [
+      {
+        label: {
+          fr: "Service historique de la Défense — répertoire des officiers coloniaux",
+          vi: "Service historique de la Défense — danh mục sĩ quan thuộc địa",
+          en: "French Defence Historical Service — colonial officers inventory",
+          es: "Servicio Histórico de Defensa — repertorio de oficiales coloniales",
+          ru: "Историческая служба Министерства обороны Франции — список колониальных офицеров"
+        },
+        url: "https://www.servicehistorique.sga.defense.gouv.fr/sites/default/files/2019-10/SHDGR_INV_GR3YE_OFFICIERS_COLONIALE_1900.pdf"
+      },
+      {
+        label: {
+          fr: "Dossier Légion d’honneur — cote LH/594/70 (inventaire)",
+          vi: "Hồ sơ Bắc Đẩu Bội tinh — mã LH/594/70",
+          en: "Légion d’honneur file — reference LH/594/70 (inventory)",
+          es: "Expediente de la Legión de Honor — referencia LH/594/70",
+          ru: "Дело ордена Почётного легиона — шифр LH/594/70"
+        },
+        url: "https://es.geneanet.org/registros/view/524061"
+      }
+    ]
+  });
+
+  C.people.push({
+    id: "rigault",
+    name: "Charles Rigault de Genouilly",
+    role: {
+      fr: "Amiral français ; son nom figure dans l’inscription de l’ossuaire.",
+      vi: "Đô đốc Pháp; tên ông xuất hiện trên bia nhà lưu cốt.",
+      en: "French admiral; his name appears on the ossuary inscription.",
+      es: "Almirante francés; su nombre aparece en la inscripción del osario.",
+      ru: "Французский адмирал; его имя указано на табличке оссуария."
+    }
+  });
+})();
