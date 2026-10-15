@@ -17,7 +17,7 @@ Application patrimoniale mobile-first consacrée au cimetière franco-espagnol Y
 - `site-content.js` : textes multilingues, traductions d’inscriptions, notices, liens et définition des marqueurs.
 - `plaque_ossuaire.jpg` : première cible AR, plaque de l’ossuaire.
 - `plaque_treille.jpg` : deuxième cible AR, plaque du monument érigé en 1898.
-- `plaque_correard.jpg` : troisième cible AR, épitaphe de Charles Alexandre Corréard (image de référence légèrement ajustée pour le contraste et la netteté).
+- `plaque_correard.jpg` : troisième cible AR, épitaphe de Charles Alexandre Corréard. Le repère a été remplacé par une image mieux définie, recadrée sur les ~72 % supérieurs de la pierre pour privilégier le nom et les lignes les plus distinctives. Seul le contraste/la netteté et le cadrage ont été ajustés ; aucun caractère manquant n'a été reconstitué dans l'image cible.
 
 ## Ajouter un marqueur AR
 
@@ -67,7 +67,7 @@ Site statique : publier la racine du dépôt sur Vercel, sans étape de compilat
 - When a marker is lost, its detected content stays visible for five seconds before the overlay is dismissed. If the marker is reacquired during this grace period, the timer is cancelled.
 - After the page finishes loading, MindAR and the complete image-target set are warmed up in the background. The compiler job is shared with any user-triggered camera start to avoid duplicate compilation.
 - The current compiled target set is held in JavaScript memory for the active visit and persisted in IndexedDB under `targetSetVersion`. Increment `targetSetVersion` whenever a target image or target ordering/content is changed, so old cached target data cannot be reused.
-- MindAR is configured with `warmupTolerance: 3` and `missTolerance: 12` for faster recognition and better tolerance of transient feature loss on weathered inscriptions. The visitor overlay additionally remains visible for five seconds after the tracker reports a lost target. These settings help with momentary tracking loss but cannot recover details physically missing from an inscription.
+- MindAR is configured with `warmupTolerance: 3` and `missTolerance: 18`. The higher miss tolerance keeps the tracker from declaring a target lost after only a few missed frames, which can help with unstable images on weathered stone. The visitor overlay additionally remains visible for five seconds after the tracker reports a lost target. These settings do not increase the number of visual features in an image; they cannot by themselves make a weak marker detectable or recover details physically missing from an inscription.
 - Background preparation does not ask for or start camera access; the camera is activated only after the visitor presses the start button. If the automatic preparation fails, starting the camera will try again and show the error.
 
 ## Liens
