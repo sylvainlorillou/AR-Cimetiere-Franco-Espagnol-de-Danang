@@ -436,3 +436,33 @@ window.MEMOIRE_CONFIG = {
     }
   ];
 })();
+
+// Final editorial completeness for new languages and inscription labels.
+(() => {
+  const C = window.MEMOIRE_CONFIG;
+  Object.assign(C.ui.fr, {sourceInscriptionTitle:"Transcription relevée (français)", biographyLabel:"Biographie"});
+  Object.assign(C.ui.vi, {sourceInscriptionTitle:"Bản chép nội dung (tiếng Pháp)", biographyLabel:"Tiểu sử"});
+  Object.assign(C.ui.en, {sourceInscriptionTitle:"Transcription (French)", biographyLabel:"Biography"});
+  Object.assign(C.ui.es, {sourceInscriptionTitle:"Transcripción desarrollada (francés)", biographyLabel:"Biografía"});
+  Object.assign(C.ui.ru, {sourceInscriptionTitle:"Транскрипция (французский)", biographyLabel:"Биография"});
+
+  const first = C.arTargets[0];
+  Object.assign(first.title, {es:"La placa del osario", ru:"Табличка оссуария"});
+  Object.assign(first.description, {
+    es:"Esta placa recuerda a los combatientes franceses y españoles de la expedición de Rigault de Genouilly que murieron en 1858, 1859 y 1860 y fueron enterrados aquí.",
+    ru:"Эта табличка посвящена французским и испанским участникам экспедиции Риго де Женуйи, погибшим в 1858, 1859 и 1860 годах и похороненным здесь."
+  });
+  Object.assign(first.note, {
+    es:"Transcripción provisional que debe comprobarse en la placa original; el texto se conserva en su idioma de origen.",
+    ru:"Предварительная транскрипция; её необходимо сверить с оригинальной табличкой. Текст сохранён на языке оригинала."
+  });
+  first.translationNotes = {
+    fr:"Le texte original est en français.",
+    vi:"Bản dịch tham khảo từ nguyên văn tiếng Pháp.",
+    en:"Translation from the original French inscription.",
+    es:"Traducción de la inscripción original en francés.",
+    ru:"Перевод с оригинальной французской надписи."
+  };
+  C.arTargets[1].translationNotes.fr = "Traduction proposée à partir de la transcription développée fournie pour ce projet. À vérifier sur la plaque originale.";
+  C.arTargets[1].translations.vi = C.arTargets[1].translations.vi.replace("Reverend Father Laurent", "Linh mục Laurent");
+})();
