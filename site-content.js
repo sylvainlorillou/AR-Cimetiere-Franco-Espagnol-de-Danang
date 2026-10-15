@@ -683,3 +683,20 @@ window.MEMOIRE_CONFIG = {
  Object.assign(U.es, {enterFullscreen:"Cámara a pantalla completa",exitFullscreen:"Salir de pantalla completa"});
  Object.assign(U.ru, {enterFullscreen:"Камера на весь экран",exitFullscreen:"Выйти из полноэкранного режима"});
 })();
+ 
+// AECV_DISCOVERY_AND_PORTRAIT_LABELS: discovery page + optimized biography images.
+(() => {
+ const C = window.MEMOIRE_CONFIG;
+ const laurent = C.people.find(p => p.id === "laurent");
+ const rigault = C.people.find(p => p.id === "rigault");
+ if (laurent) laurent.portrait = "./portrait-joseph-laurent.jpg";
+ if (rigault) rigault.portrait = "./portrait-charles-rigault-de-genouilly.jpg";
+ const labels = {
+  fr: {navDiscoveries:"Découvertes",discoveryTitle:"Votre parcours de découverte",discoveryIntro:"Retrouvez ici les plaques et inscriptions à explorer. Une plaque passe en gras après sa reconnaissance par la caméra.",discoveryDiscovered:"Déjà découverte",discoveryToFind:"À découvrir",discoveryOpen:"Consulter la fiche",discoveryProgress:"Progression",returnToPlaque:"Retour à l’inscription"},
+  vi: {navDiscoveries:"Khám phá",discoveryTitle:"Hành trình khám phá của bạn",discoveryIntro:"Tại đây có danh sách các bia và văn khắc cần khám phá. Bia sẽ được in đậm sau khi camera nhận diện.",discoveryDiscovered:"Đã khám phá",discoveryToFind:"Chưa khám phá",discoveryOpen:"Xem thông tin",discoveryProgress:"Tiến độ",returnToPlaque:"Quay lại văn bia"},
+  en: {navDiscoveries:"Discoveries",discoveryTitle:"Your discovery trail",discoveryIntro:"Browse the plaques and inscriptions to explore. An item becomes bold after the camera recognizes it.",discoveryDiscovered:"Discovered",discoveryToFind:"To discover",discoveryOpen:"View details",discoveryProgress:"Progress",returnToPlaque:"Back to inscription"},
+  es: {navDiscoveries:"Descubrimientos",discoveryTitle:"Tu recorrido de descubrimiento",discoveryIntro:"Aquí encontrarás las placas e inscripciones por explorar. Un elemento aparecerá en negrita después de que la cámara lo reconozca.",discoveryDiscovered:"Descubierto",discoveryToFind:"Por descubrir",discoveryOpen:"Consultar ficha",discoveryProgress:"Progreso",returnToPlaque:"Volver a la inscripción"},
+  ru: {navDiscoveries:"Открытия",discoveryTitle:"Ваш маршрут открытий",discoveryIntro:"Здесь собраны таблички и надписи для изучения. После распознавания камерой название выделяется жирным шрифтом.",discoveryDiscovered:"Уже открыто",discoveryToFind:"Предстоит открыть",discoveryOpen:"Открыть описание",discoveryProgress:"Прогресс",returnToPlaque:"Вернуться к надписи"}
+ };
+ for (const lang of Object.keys(labels)) Object.assign(C.ui[lang], labels[lang]);
+})();
