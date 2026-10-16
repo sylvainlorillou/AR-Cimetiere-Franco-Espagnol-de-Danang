@@ -700,3 +700,14 @@ window.MEMOIRE_CONFIG = {
  };
  for (const lang of Object.keys(labels)) Object.assign(C.ui[lang], labels[lang]);
 })();
+
+ 
+// Temporary cemetery schematic layer: labels localized for all navigation languages.
+(() => {
+ const U = window.MEMOIRE_CONFIG.ui;
+ Object.assign(U.fr, {mapSchema:"Schéma du cimetière",mapSchemaNote:"Schéma de travail calé sur la croix de l’ossuaire (16°07′21.0″ N, 108°13′12.1″ E). Nord en haut ; échelle estimée à partir de la barre de 10 m. Les dimensions et le positionnement restent à vérifier sur place.",schemaAnchorLabel:"Croix au centre de l’ossuaire"});
+ Object.assign(U.vi, {mapSchema:"Sơ đồ nghĩa trang",mapSchemaNote:"Sơ đồ thử nghiệm được căn theo dấu thánh giá ở giữa nhà lưu cốt (16°07′21.0″ N, 108°13′12.1″ E). Phía bắc ở trên; tỷ lệ ước tính theo thước 10 m. Kích thước và vị trí cần được kiểm tra thực địa.",schemaAnchorLabel:"Dấu thánh giá giữa nhà lưu cốt"});
+ Object.assign(U.en, {mapSchema:"Cemetery schematic",mapSchemaNote:"Working schematic aligned to the cross at the centre of the ossuary (16°07′21.0″ N, 108°13′12.1″ E). North is up; scale estimated from the 10 m bar. Dimensions and placement still need an on-site check.",schemaAnchorLabel:"Cross at the centre of the ossuary"});
+ Object.assign(U.es, {mapSchema:"Esquema del cementerio",mapSchemaNote:"Esquema provisional alineado con la cruz del centro del osario (16°07′21.0″ N, 108°13′12.1″ E). El norte está arriba; la escala se estima a partir de la barra de 10 m. Las dimensiones y la posición deben verificarse in situ.",schemaAnchorLabel:"Cruz en el centro del osario"});
+ Object.assign(U.ru, {mapSchema:"Схема кладбища",mapSchemaNote:"Рабочая схема привязана к кресту в центре оссуария (16°07′21.0″ N, 108°13′12.1″ E). Север сверху; масштаб оценён по шкале 10 м. Размеры и положение необходимо проверить на месте.",schemaAnchorLabel:"Крест в центре оссуария"});
+})();
