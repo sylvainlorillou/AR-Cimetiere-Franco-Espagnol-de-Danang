@@ -1,0 +1,72 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="996" viewBox="0 0 1024 996">
+<defs>
+ <pattern id="veg" width="12" height="12" patternUnits="userSpaceOnUse"><rect width="12" height="12" fill="#e0e0cf"/><path d="M-2 12L12-2M4 16L16 4" stroke="#9da693" stroke-width="1"/></pattern>
+ <style>
+ .label{font-family:Arial,sans-serif;fill:#111;font-size:19px}.small{font-size:13px}.tomb{fill:#fafafa;stroke:#161616;stroke-width:1.2}.tn{font-family:Arial,sans-serif;font-size:14px;text-anchor:middle;dominant-baseline:middle;fill:#111}.call{stroke:#253f50;stroke-width:1.5;fill:none}.edge{stroke:#111;stroke-width:6;fill:none}.edge2{stroke:#f8f3df;stroke-width:1.6;fill:none}
+ </style>
+</defs>
+<rect width="1024" height="996" fill="#faf6e7"/>
+<text x="512" y="39" text-anchor="middle" font-family="Arial,sans-serif" font-size="27" fill="#111">SCHÉMA D’INVENTAIRE - CIMETIÈRE FRANCO-ESPAGNOL DE DANANG</text>
+<text x="512" y="65" text-anchor="middle" font-family="Arial,sans-serif" font-size="20" fill="#111">(Basé sur l'image satellite, Nord en haut)</text>
+<path d="M8 74 L429 78 466 98 600 78 635 102 692 106 736 173 722 205 752 235 778 292 825 329 876 438 916 489 916 552 940 575 907 618 870 685 856 767 797 820 737 869 658 868 602 912 482 909 369 893 278 849 226 858 145 804 94 712 34 665 9 600Z" fill="url(#veg)"/>
+<path d="M91 374 L644 94 L721 206 L852 453 L892 517 L877 532 L907 601 L660 705 L633 713 L610 663 L602 639 L559 659 L252 776 L321 742 L197 798 L90 375Z" fill="#b7d2a5" stroke="#333" stroke-width="2"/>
+<path d="M89 374 L645 95 L720 207 L851 453 L891 517 L877 532 L907 601 L660 706 L633 714 L610 662 L601 639 L559 659 L321 741 L253 778 L198 799Z" class="edge"/>
+<path d="M89 374 L645 95 L720 207 L851 453 L891 517 L877 532 L907 601 L660 706 L633 714 L610 662 L601 639 L559 659 L321 741 L253 778 L198 799Z" class="edge2"/>
+<!-- central chapel/ossuary -->
+<polygon points="457,324 565,250 677,431 568,503" fill="#c9b29a" stroke="#42372f" stroke-width="2.2"/>
+<polygon points="482,337 560,283 642,426 566,474" fill="#d6c2aa" stroke="#171717" stroke-width="2"/>
+<path d="M482 337L562 374L560 283M562 374L566 474M562 374L642 426" stroke="#171717" stroke-width="1.5" fill="none"/>
+<path d="M557 367v18m-8-9h16" stroke="#111" stroke-width="1.6"/>
+<!-- north arrow -->
+<text x="977" y="106" class="label" font-size="24">N</text><path d="M978 188V119L966 149L978 119L990 149Z" fill="none" stroke="#111" stroke-width="2.2"/>
+<!-- graves, with positions resembling the inventory sketch -->
+<g transform="rotate(-28 218 382)"><rect x="196" y="361" width="40" height="51" class="tomb"/><text x="216" y="387" class="tn">T1</text></g>
+<g transform="rotate(-28 277 376)"><rect x="257" y="356" width="39" height="47" class="tomb"/><text x="276" y="379" class="tn">T2</text></g>
+<g transform="rotate(-28 325 353)"><rect x="305" y="333" width="39" height="47" class="tomb"/><text x="324" y="356" class="tn">T3</text></g>
+<g transform="rotate(-28 369 336)"><rect x="349" y="311" width="40" height="52" class="tomb"/><text x="369" y="337" class="tn">T4</text></g>
+<g transform="rotate(-28 410 310)"><rect x="392" y="288" width="38" height="48" class="tomb"/><text x="411" y="312" class="tn">T5</text></g>
+<g transform="rotate(-28 586 211)"><rect x="567" y="190" width="39" height="46" class="tomb"/><text x="586" y="213" class="tn">T25</text></g>
+<g transform="rotate(-28 639 177)"><rect x="620" y="153" width="40" height="49" class="tomb"/><text x="640" y="177" class="tn">T16</text></g>
+<g transform="rotate(-28 638 288)"><rect x="617" y="267" width="41" height="45" class="tomb"/><text x="638" y="289" class="tn">T24</text></g>
+<g transform="rotate(-28 676 348)"><rect x="656" y="326" width="41" height="45" class="tomb"/><text x="676" y="348" class="tn">T24</text></g>
+<g transform="rotate(-28 711 397)"><rect x="689" y="373" width="43" height="48" class="tomb"/><text x="711" y="397" class="tn">T23</text></g>
+<g transform="rotate(18 748 482)"><rect x="735" y="457" width="29" height="53" class="tomb"/><text x="750" y="484" class="tn">T20</text></g>
+<g transform="rotate(18 781 487)"><rect x="767" y="462" width="29" height="54" class="tomb"/><text x="782" y="488" class="tn">T22</text></g>
+<g transform="rotate(18 811 507)"><rect x="797" y="482" width="29" height="54" class="tomb"/><text x="812" y="508" class="tn">T25</text></g>
+<g transform="rotate(18 837 525)"><rect x="823" y="500" width="29" height="54" class="tomb"/><text x="838" y="526" class="tn">T26</text></g>
+<g transform="rotate(16 256 454)"><rect x="235" y="437" width="43" height="34" class="tomb"/><text x="256" y="455" class="tn">T8</text></g>
+<g transform="rotate(18 386 410)"><rect x="358" y="392" width="54" height="34" class="tomb"/><text x="385" y="410" class="tn">T11</text></g>
+<g transform="rotate(-34 463 414)"><rect x="440" y="397" width="45" height="34" class="tomb"/><text x="462" y="415" class="tn">T14</text></g>
+<g transform="rotate(-34 480 451)"><rect x="457" y="434" width="46" height="34" class="tomb"/><text x="480" y="452" class="tn">T13</text></g>
+<g transform="rotate(18 376 444)"><rect x="352" y="426" width="48" height="34" class="tomb"/><text x="376" y="444" class="tn">T12</text></g>
+<g transform="rotate(-28 511 475)"><rect x="487" y="457" width="48" height="35" class="tomb"/><text x="511" y="475" class="tn">T12</text></g>
+<g transform="rotate(15 368 496)"><rect x="344" y="478" width="48" height="36" class="tomb"/><text x="368" y="496" class="tn">T10</text></g>
+<g transform="rotate(-25 352 571)"><rect x="327" y="552" width="49" height="36" class="tomb"/><text x="352" y="571" class="tn">T9</text></g>
+<g transform="rotate(-22 529 552)"><rect x="505" y="533" width="48" height="37" class="tomb"/><text x="529" y="552" class="tn">T11</text></g>
+<g transform="rotate(-22 548 590)"><rect x="523" y="571" width="50" height="38" class="tomb"/><text x="548" y="590" class="tn">T10</text></g>
+<g transform="rotate(-22 366 621)"><rect x="342" y="603" width="48" height="36" class="tomb"/><text x="366" y="621" class="tn">T8</text></g>
+<g transform="rotate(-22 368 674)"><rect x="344" y="656" width="48" height="36" class="tomb"/><text x="368" y="674" class="tn">T7</text></g>
+<g transform="rotate(-22 570 701)"><rect x="548" y="678" width="44" height="48" class="tomb"/><text x="570" y="702" class="tn">T16</text></g>
+<g transform="rotate(-17 635 680)"><rect x="615" y="655" width="43" height="49" class="tomb"/><text x="635" y="680" class="tn">T26</text></g>
+<g transform="rotate(-22 716 616)"><rect x="696" y="589" width="42" height="52" class="tomb"/><text x="717" y="616" class="tn">T23</text></g>
+<g transform="rotate(-22 777 604)"><rect x="755" y="580" width="42" height="50" class="tomb"/><text x="776" y="604" class="tn">T24</text></g>
+<!-- perimeter and building callouts -->
+<path d="M693 185L758 134L792 134M622 372L778 252L805 252M727 401L812 331L833 331" class="call"/>
+<text x="767" y="126" class="label" font-size="16">PÉRIMÈTRE /</text><text x="777" y="147" class="label" font-size="16">CLÔTURE</text>
+<text x="811" y="243" class="label" font-size="16">CHAPELLE / OSSUAIRE</text><text x="828" y="265" class="label" font-size="15">(Bâtiment central)</text>
+<text x="836" y="324" class="label" font-size="16">PIERRES TOMBALES</text><text x="838" y="345" class="label" font-size="15">(T1, T2, T3...)</text>
+<!-- entrance -->
+<path d="M243 798L226 841L260 857" stroke="#263f51" stroke-width="2" fill="none"/>
+<text x="130" y="883" class="label" font-size="17">ACCÈS /</text><text x="130" y="905" class="label" font-size="17">ENTRÉE</text>
+<!-- scale -->
+<rect x="480" y="790" width="170" height="8" fill="#111"/><rect x="480" y="790" width="85" height="8" fill="#faf6e7" stroke="#111" stroke-width="1"/>
+<text x="480" y="783" class="label small">0</text><text x="564" y="783" class="label small">5</text><text x="647" y="783" class="label small">10 m</text>
+<!-- legend -->
+<rect x="655" y="821" width="359" height="164" fill="#faf6e7" stroke="#111" stroke-width="1.4"/>
+<path d="M671 844H730M671 852H730" stroke="#111" stroke-width="3"/><path d="M671 844H730M671 852H730" stroke="#faf6e7" stroke-width="1"/>
+<text x="744" y="853" class="label" font-size="16">= Mur d’enceinte / Périmètre</text>
+<rect x="671" y="869" width="57" height="24" fill="#c9b29a" stroke="#333"/><text x="744" y="888" class="label" font-size="16">= Chapelle / Ossuaire</text>
+<rect x="671" y="904" width="57" height="24" class="tomb"/><text x="699" y="916" class="tn">(T)</text><text x="744" y="922" class="label" font-size="16">= Pierre tombale</text>
+<rect x="671" y="939" width="57" height="24" fill="#b7d2a5" stroke="#333"/><text x="744" y="958" class="label" font-size="16">= Végétation / Pelouse</text>
+<!-- anchor used for georeferencing, cross at ossuary center: (562,374) -->
+</svg>
