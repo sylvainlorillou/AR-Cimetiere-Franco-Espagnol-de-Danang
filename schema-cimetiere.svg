@@ -16,7 +16,7 @@
 <polygon points="457,324 565,250 677,431 568,503" fill="#c9b29a" stroke="#42372f" stroke-width="2.2"/>
 <polygon points="482,337 560,283 642,426 566,474" fill="#d6c2aa" stroke="#171717" stroke-width="2"/>
 <path d="M482 337L562 374L560 283M562 374L566 474M562 374L642 426" stroke="#171717" stroke-width="1.5" fill="none"/>
-<path d="M557 367v18m-8-9h16" stroke="#111" stroke-width="1.6"/>
+<path d="M562 365v18m-9-9h18" stroke="#111" stroke-width="1.6"/>
 <!-- north arrow -->
 <text x="977" y="106" class="label" font-size="24">N</text><path d="M978 188V119L966 149L978 119L990 149Z" fill="none" stroke="#111" stroke-width="2.2"/>
 <!-- graves, with positions resembling the inventory sketch -->
