@@ -699,7 +699,8 @@ function initMap(){
  return mapInitPromise;
 }
 function setMapLayer(name){
- if(!map||!streetLayer||!satelliteLayer)return;
+ if(!map){initMap().then(()=>{if(map)setMapLayer(name)});return}
+ if(!streetLayer||!satelliteLayer)return;
  if(!['street','satellite','schema'].includes(name))return;
  if(name==='schema'){
   streetLayer.remove();satelliteLayer.remove();if(siteMarker)siteMarker.remove();
