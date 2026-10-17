@@ -17,8 +17,8 @@ Application patrimoniale mobile-first consacrée au cimetière franco-espagnol Y
 - `site-content.js` : textes multilingues, traductions d’inscriptions, notices, liens et définition des marqueurs.
 - `plaque_ossuaire.jpg` : première cible AR, plaque de l’ossuaire.
 - `plaque_treille.jpg` : deuxième cible AR, plaque du monument érigé en 1898.
-- `plaque_correard.jpg` : troisième cible AR, épitaphe de Charles Alexandre Corréard. Le repère a été remplacé par une image mieux définie, recadrée sur les ~72 % supérieurs de la pierre pour privilégier le nom et les lignes les plus distinctives. Seul le contraste/la netteté et le cadrage ont été ajustés ; aucun caractère manquant n'a été reconstitué dans l'image cible.
-- `correard_overlay.svg` : calque transparent issu du PNG de restitution fourni pour l’épitaphe. Il est superposé en perspective sur la vidéo lorsque Corréard est reconnu, avec une position calibrée pour aligner le nom et les lignes visibles.
+- `plaque_correard.jpg` : cible de suivi MindAR recadrée sur la pierre verticale de Corréard. La reconnaissance visuelle s'appuie sur le cadrage du monument et ses détails de surface ; le système ne réalise pas d'OCR de l'épitaphe.
+- `correard_overlay.svg` : restitution en SVG de la surface de la pierre et des caractères de l'épitaphe. Elle est projetée sur les quatre coins du plan détecté, avec ajustement de perspective, filtrage des variations de pose et réglage d'opacité.
 
 ## Ajouter un marqueur AR
 
@@ -93,3 +93,12 @@ For a future inscription, add a transparent PNG/SVG restoration, configure the r
 The live Corréard inscription layer now applies temporal smoothing to its projected four-corner quadrilateral in screen coordinates (EMA alpha 0.16). This attenuates scale and perspective flutter from small frame-to-frame pose variations while leaving MindAR's own tracking and the two earlier targets unchanged. The smoothing state resets on target loss, target switch, resize, and full-screen layout changes.
 
 The camera view includes a full-screen control. It uses the browser Fullscreen API when supported, with a fixed-viewport CSS fallback for browsers that do not expose element fullscreen. The control labels are localized in French, Vietnamese, English, Spanish, and Russian.
+
+
+## Ajustements AR Corréard (v5)
+
+- La cible MindAR reste la photographie plein-cadre de la stèle présente dans le dépôt ; la reconnaissance se fait par correspondance d'image, sans lecture OCR du texte.
+- La restitution SVG comprend maintenant une surface de pierre stylisée derrière les lettres. Son format est aligné sur celui de la cible, sans décalage vertical calibré sur les seules inscriptions.
+- Le calque suit les quatre coins projetés par MindAR pour adapter taille et perspective. Une interpolation plus réactive stabilise les petits mouvements et les sauts de pose isolés doivent être confirmés sur plusieurs images.
+- Un curseur permet de régler l’opacité de la restitution entre 45 % et 100 %.
+- Le comportement de la caméra doit encore être validé par des essais sur la tombe. La robustesse dépendra des détails visibles, de l’angle, de la lumière et du téléphone.

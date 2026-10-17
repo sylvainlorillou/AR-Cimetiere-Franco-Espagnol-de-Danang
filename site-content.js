@@ -483,7 +483,7 @@ window.MEMOIRE_CONFIG = {
 // This helps feature extraction but does not "restore" or invent missing engraving details.
 (() => {
   const C = window.MEMOIRE_CONFIG;
-  C.targetSetVersion = "aecv-mindar-2026-10-v4";
+  C.targetSetVersion = "aecv-mindar-2026-10-v5";
 
   const corrText = "Ci-gît Corréard (Charles Alexandre)\nCapitaine en 1er rang d’Artillerie de Marine\nDécédé à Tourane le 21 mai 1859";
   C.arTargets.push({
@@ -710,4 +710,15 @@ window.MEMOIRE_CONFIG = {
  Object.assign(U.en, {mapSchema:"Cemetery schematic",mapSchemaNote:"Working schematic aligned to the cross at the centre of the ossuary (16°07′21.0″ N, 108°13′12.1″ E). North is up; scale estimated from the 10 m bar. Dimensions and placement still need an on-site check.",schemaAnchorLabel:"Cross at the centre of the ossuary"});
  Object.assign(U.es, {mapSchema:"Esquema del cementerio",mapSchemaNote:"Esquema provisional alineado con la cruz del centro del osario (16°07′21.0″ N, 108°13′12.1″ E). El norte está arriba; la escala se estima a partir de la barra de 10 m. Las dimensiones y la posición deben verificarse in situ.",schemaAnchorLabel:"Cruz en el centro del osario"});
  Object.assign(U.ru, {mapSchema:"Схема кладбища",mapSchemaNote:"Рабочая схема привязана к кресту в центре оссуария (16°07′21.0″ N, 108°13′12.1″ E). Север сверху; масштаб оценён по шкале 10 м. Размеры и положение необходимо проверить на месте.",schemaAnchorLabel:"Крест в центре оссуария"});
+})();
+
+
+// Corréard AR: full-stone recognition guidance and opacity control.
+(() => {
+ const U=window.MEMOIRE_CONFIG.ui;
+ Object.assign(U.fr,{cameraTitle:"Cadrez la pierre tombale de Corréard",cameraIntro:"Cadrez toute la pierre, plutôt de face. La détection s’appuie sur sa silhouette et sa texture, pas sur la lecture de l’épitaphe.",overlayOpacity:"Opacité de la reconstitution"});
+ Object.assign(U.vi,{cameraTitle:"Lấy toàn bộ bia mộ Corréard vào khung hình",cameraIntro:"Hướng camera gần chính diện và lấy trọn bia mộ. Nhận diện dựa trên hình dáng và bề mặt đá, không dựa vào việc đọc dòng chữ.",overlayOpacity:"Độ trong suốt của bản phục dựng"});
+ Object.assign(U.en,{cameraTitle:"Frame Corréard’s whole tombstone",cameraIntro:"Frame the entire stone, preferably face-on. Detection uses the stone’s silhouette and surface texture, not the readability of the epitaph.",overlayOpacity:"Restoration opacity"});
+ Object.assign(U.es,{cameraTitle:"Encuadre toda la lápida de Corréard",cameraIntro:"Encuadre la piedra completa, preferiblemente de frente. La detección utiliza la silueta y la textura de la piedra, no la lectura del epitafio.",overlayOpacity:"Opacidad de la reconstrucción"});
+ Object.assign(U.ru,{cameraTitle:"Наведите камеру на весь памятник Корреара",cameraIntro:"Покажите камере весь камень, по возможности прямо. Распознавание опирается на контур и текстуру камня, а не на читаемость эпитафии.",overlayOpacity:"Непрозрачность реконструкции"});
 })();
