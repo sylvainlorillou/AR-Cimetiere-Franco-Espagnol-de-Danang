@@ -165,8 +165,12 @@ function pointerCentroid(points){const a=[...points.values()];return {x:(a[0].x+
 function pointerDistance(points){const a=[...points.values()];return Math.hypot(a[0].x-a[1].x,a[0].y-a[1].y)}
 mapViewport.addEventListener('pointerdown',e=>{
  if(e.pointerType==='mouse'&&e.button!==0)return;
- mapViewport.setPointerCapture(e.pointerId);
+ const alreadyTracking=activePointers.size>0;
  activePointers.set(e.pointerId,{...pointerLocal(e)});
+ if(zoom>1.001||alreadyTracking){
+  try{mapViewport.setPointerCapture(e.pointerId)}catch(_){}
+  for(const pointerId of activePointers.keys()){try{mapViewport.setPointerCapture(pointerId)}catch(_){}}
+ }
  if(activePointers.size===1){
   const p=activePointers.get(e.pointerId);
   dragState={id:e.pointerId,startX:p.x,startY:p.y,panX,panY,moved:false};
@@ -193,7 +197,9 @@ mapViewport.addEventListener('pointermove',e=>{
 });
 function endMapPointer(e){
  const prior=activePointers.get(e.pointerId);
- if(prior&&dragState&&dragState.id===e.pointerId&&dragState.moved)ignoreMapClick=true;
+ if(prior&&dragState&&dragState.id===e.pointerId&&dragState.moved){
+  ignoreMapClick=true;window.setTimeout(()=>{ignoreMapClick=false},120);
+ }
  activePointers.delete(e.pointerId);
  mapViewport.classList.remove('dragging');
  if(activePointers.size===1){
