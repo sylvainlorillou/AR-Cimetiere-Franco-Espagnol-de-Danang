@@ -722,3 +722,13 @@ window.MEMOIRE_CONFIG = {
  Object.assign(U.es,{cameraTitle:"Encuadre toda la lápida de Corréard",cameraIntro:"Encuadre la piedra completa, preferiblemente de frente. La detección utiliza la silueta y la textura de la piedra, no la lectura del epitafio.",overlayOpacity:"Opacidad de la reconstrucción"});
  Object.assign(U.ru,{cameraTitle:"Наведите камеру на весь памятник Корреара",cameraIntro:"Покажите камере весь камень, по возможности прямо. Распознавание опирается на контур и текстуру камня, а не на читаемость эпитафии.",overlayOpacity:"Непрозрачность реконструкции"});
 })();
+
+/* Interactive cemetery plan entry. The detailed plan is local and does not depend on GPS. */
+(() => {
+ const U=window.MEMOIRE_CONFIG.ui;
+ Object.assign(U.fr,{interactivePlan:"Plan interactif des tombes"});
+ Object.assign(U.vi,{interactivePlan:"Sơ đồ tương tác các ngôi mộ"});
+ Object.assign(U.en,{interactivePlan:"Interactive tomb map"});
+ Object.assign(U.es,{interactivePlan:"Plano interactivo de las tumbas"});
+ Object.assign(U.ru,{interactivePlan:"Интерактивный план могил"});
+})();
