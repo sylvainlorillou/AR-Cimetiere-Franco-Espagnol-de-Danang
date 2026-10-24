@@ -103,10 +103,13 @@ function detectFeatures(gray,initial){
  var now=initial.map(function(p){return proj(tracker.H,p)}),poly=[now[0],now[2],now[3],now[1]];
  // Prefer OpenCV's native Shi–Tomasi detector when this build exports it.
  if(typeof cv.goodFeaturesToTrack==='function'){
-  var mask=featureMask(gray,now),pts=new cv.Mat();
-  try{cv.goodFeaturesToTrack(gray,pts,180,.01,5,mask);if(pts.rows>=12)return pts;pts.delete()}
-  catch(err){if(pts)pts.delete()}
-  finally{if(mask)mask.delete()}
+  var mask=null,pts=null;
+  try{
+   mask=featureMask(gray,now);pts=new cv.Mat();
+   cv.goodFeaturesToTrack(gray,pts,180,.01,5,mask);
+   if(pts.rows>=12){if(mask)mask.delete();return pts}
+  }catch(err){/* continue with the independent JavaScript detector */}
+  if(pts)pts.delete();if(mask)mask.delete();
  }
  // Some browser builds do not export goodFeaturesToTrack. Use a compact,
  // pure-JavaScript Shi–Tomasi corner detector, restricted to the selected stela.
@@ -129,7 +132,7 @@ function detectFeatures(gray,initial){
    if(score>0)candidates.push({x:x,y:y,score:score});
   }
  }
- if(!candidates.length||maxScore<1) return cv.matFromArray(0,1,cv.CV_32FC2,[]);
+ if(!candidates.length||maxScore<1) return new cv.Mat();
  candidates.sort(function(a,b){return b.score-a.score});
  function choose(threshold){
   var selected=[];
@@ -143,6 +146,7 @@ function detectFeatures(gray,initial){
  }
  var selected=choose(Math.max(2,maxScore*.008));
  if(selected.length<12)selected=choose(Math.max(.5,maxScore*.001));
+ if(!selected.length)return new cv.Mat();
  var flat=[];selected.forEach(function(p){flat.push(p.x,p.y)});
  return cv.matFromArray(selected.length,1,cv.CV_32FC2,flat);
 }
