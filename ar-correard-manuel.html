@@ -24,8 +24,50 @@ var stream=null,cvReady=false,calibration=[],step=0,tracker=null,tracking=false,
 var trackCanvas=document.createElement('canvas'),trackCtx=trackCanvas.getContext('2d',{willReadFrequently:true});
 function status(message,kind){statusEl.textContent=message;statusEl.className='status '+(kind||'')}
 function stageSize(){if(!video.videoWidth||!video.videoHeight)return;var maxH=Math.min(window.innerHeight*.66,680),ratio=video.videoWidth/video.videoHeight,w=Math.max(240,Math.min(stage.parentElement.clientWidth,maxH*ratio));stage.style.width=w+'px';stage.style.height=(w/ratio)+'px';stage.style.display='block';trackCanvas.width=640;trackCanvas.height=Math.max(1,Math.round(640*video.videoHeight/video.videoWidth))}
-function waitForCV(){return new Promise(function(resolve,reject){var n=0,t=setInterval(function(){n++;if(window.cv&&cv.Mat&&cv.calcOpticalFlowPyrLK){clearInterval(t);resolve()}else if(n>120){clearInterval(t);reject(new Error('Le moteur de suivi ne s’est pas chargé. Vérifie la connexion Internet puis réessaie.'))}},250)})}
-async function startCamera(){document.getElementById('startBtn').disabled=true;status('Activation de la caméra…');try{stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});video.srcObject=stream;await video.play();stageSize();window.addEventListener('resize',onResize);status('Chargement du suivi optique…');if(!window.cv){var script=document.createElement('script');script.src='https://docs.opencv.org/4.x/opencv.js';script.async=true;document.head.appendChild(script)}await waitForCV();cvReady=true;document.getElementById('stopBtn').disabled=false;document.getElementById('recalBtn').disabled=false;status('Caméra prête. Suis les quatre consignes et touche chaque repère sur la stèle.','good');setStep(0)}catch(e){status(e.message||'Caméra indisponible. Vérifie les autorisations et utilise le site en HTTPS.','bad');document.getElementById('startBtn').disabled=false;if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}}}
+let cvLoadPromise=null;
+function waitForCV(){
+ if(cvLoadPromise)return cvLoadPromise;
+ cvLoadPromise=(async function(){
+  const scriptId='opencv-js-script';
+  if(!(window.cv&&typeof window.cv.Mat==='function')){
+   await new Promise(function(resolve,reject){
+    let script=document.getElementById(scriptId);
+    if(script){
+     if(script.dataset.loaded==='true'){resolve();return}
+     script.addEventListener('load',function(){script.dataset.loaded='true';resolve()},{once:true});
+     script.addEventListener('error',function(){reject(new Error('Le fichier OpenCV.js ne peut pas être téléchargé depuis docs.opencv.org. Le réseau peut autoriser les pages web mais bloquer ce CDN.'))},{once:true});
+     return;
+    }
+    script=document.createElement('script');
+    script.id=scriptId;
+    script.src='https://docs.opencv.org/4.13.0/opencv.js';
+    script.async=true;
+    script.onload=function(){script.dataset.loaded='true';resolve()};
+    script.onerror=function(){reject(new Error('Le fichier OpenCV.js ne peut pas être téléchargé depuis docs.opencv.org. Le réseau peut autoriser les pages web mais bloquer ce CDN.'))};
+    document.head.appendChild(script);
+   });
+  }
+  const deadline=Date.now()+30000;
+  let lastError=null;
+  while(Date.now()<deadline){
+   try{
+    let candidate=window.cv;
+    if(candidate&&typeof candidate.then==='function')candidate=await candidate;
+    if(candidate&&typeof candidate.Mat==='function'&&typeof candidate.calcOpticalFlowPyrLK==='function'){
+     // Recent official OpenCV.js builds expose cv as a Promise; store the resolved runtime globally.
+     window.cv=candidate;
+     return candidate;
+    }
+    if(candidate)lastError=new Error('Le script est chargé, mais les fonctions de suivi optique ne sont pas encore disponibles.');
+   }catch(err){lastError=err}
+   await new Promise(function(resolve){setTimeout(resolve,100)});
+  }
+  if(lastError)throw new Error('OpenCV.js a été téléchargé mais son moteur ne s’est pas initialisé correctement : '+(lastError.message||lastError));
+  throw new Error('Le moteur OpenCV.js n’a pas terminé son initialisation WebAssembly après 30 secondes. Réessaie après avoir rechargé la page ; si le problème persiste, le navigateur ou le CDN bloque probablement le module.');
+ })().catch(function(err){cvLoadPromise=null;throw err});
+ return cvLoadPromise;
+}
+async function startCamera(){document.getElementById('startBtn').disabled=true;status('Activation de la caméra…');try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('Caméra non accessible : ouvre cette page en HTTPS dans un navigateur compatible.');stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});video.srcObject=stream;await video.play();stageSize();window.addEventListener('resize',onResize);status('Chargement du suivi optique…');await waitForCV();cvReady=true;document.getElementById('stopBtn').disabled=false;document.getElementById('recalBtn').disabled=false;status('Moteur prêt. Suis les quatre consignes et touche chaque repère sur la stèle.','good');setStep(0)}catch(e){status(e.message||'Caméra indisponible. Vérifie les autorisations et utilise le site en HTTPS.','bad');document.getElementById('startBtn').disabled=false;if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}video.srcObject=null;stage.style.display='none';window.removeEventListener('resize',onResize)}}
 function onResize(){if(!stream)return;stopTracking();stageSize();if(calibration.length){resetCalibration();status('L’écran a changé de taille : refais le calage.','bad')}}
 function setStep(i){step=i;document.getElementById('stepTitle').textContent=i<4?stepInfo[i].title:'Calage terminé';document.getElementById('stepText').textContent=i<4?stepInfo[i].text:'La restitution est affichée. Bouge doucement le téléphone, sans sortir la stèle du cadre.';document.querySelectorAll('.step').forEach(function(n,j){n.classList.toggle('active',j===i);n.classList.toggle('done',j<i||i===4)})}
 function localPoint(e){var r=stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
