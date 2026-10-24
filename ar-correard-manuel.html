@@ -98,7 +98,54 @@ function cssH(H){var a=[H[0],H[3],0,H[6],H[1],H[4],0,H[7],0,0,1,0,H[2],H[5],0,1]
 function updateOverlay(){if(!tracker)return;var sw=stage.clientWidth,sh=stage.clientHeight,tw=trackCanvas.width,th=trackCanvas.height;var dst=tracker.initialTaps.map(function(p){return proj(tracker.H,p)}).map(function(p){return{x:p.x*sw/tw,y:p.y*sh/th}});overlay.style.transform=cssH(solveH(sourceAnchors,dst));overlay.style.opacity=Number(document.getElementById('opacitySlider').value)/100;overlay.style.display=restorationVisible?'block':'none'}
 function grabGray(){trackCtx.drawImage(video,0,0,trackCanvas.width,trackCanvas.height);var rgba=cv.imread(trackCanvas),gray=new cv.Mat();cv.cvtColor(rgba,gray,cv.COLOR_RGBA2GRAY);rgba.delete();return gray}
 function featureMask(gray,pts){var mask=cv.Mat.zeros(gray.rows,gray.cols,cv.CV_8UC1),order=[0,2,3,1],flat=[];order.forEach(function(i){flat.push(Math.round(pts[i].x),Math.round(pts[i].y))});var poly=cv.matFromArray(4,1,cv.CV_32SC2,flat),polys=new cv.MatVector();polys.push_back(poly);cv.fillPoly(mask,polys,new cv.Scalar(255));poly.delete();polys.delete();return mask}
-function detectFeatures(gray,initial){var now=initial.map(function(p){return proj(tracker.H,p)}),mask=featureMask(gray,now),pts=new cv.Mat();cv.goodFeaturesToTrack(gray,pts,180,.01,5,mask);mask.delete();return pts}
+function pointInPoly(x,y,poly){var inside=false;for(var i=0,j=poly.length-1;i<poly.length;j=i++){var xi=poly[i].x,yi=poly[i].y,xj=poly[j].x,yj=poly[j].y;var cross=((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi+1e-9)+xi);if(cross)inside=!inside}return inside}
+function detectFeatures(gray,initial){
+ var now=initial.map(function(p){return proj(tracker.H,p)}),poly=[now[0],now[2],now[3],now[1]];
+ // Prefer OpenCV's native Shi–Tomasi detector when this build exports it.
+ if(typeof cv.goodFeaturesToTrack==='function'){
+  var mask=featureMask(gray,now),pts=new cv.Mat();
+  try{cv.goodFeaturesToTrack(gray,pts,180,.01,5,mask);if(pts.rows>=12)return pts;pts.delete()}
+  catch(err){if(pts)pts.delete()}
+  finally{if(mask)mask.delete()}
+ }
+ // Some browser builds do not export goodFeaturesToTrack. Use a compact,
+ // pure-JavaScript Shi–Tomasi corner detector, restricted to the selected stela.
+ var w=gray.cols,h=gray.rows,pixels=gray.data;
+ if(!pixels||pixels.length<w*h)throw new Error('Le flux gris du suivi n’est pas disponible dans cette version d’OpenCV.');
+ function px(x,y){return pixels[y*w+x]}
+ var candidates=[],maxScore=0,margin=4,stepSize=3,rad=2;
+ for(var y=margin;y<h-margin;y+=stepSize){
+  for(var x=margin;x<w-margin;x+=stepSize){
+   if(!pointInPoly(x,y,poly))continue;
+   var a=0,b=0,c=0;
+   for(var dy=-rad;dy<=rad;dy++)for(var dx=-rad;dx<=rad;dx++){
+    var gx=(px(x+dx+1,y+dy)-px(x+dx-1,y+dy))*0.5;
+    var gy=(px(x+dx,y+dy+1)-px(x+dx,y+dy-1))*0.5;
+    a+=gx*gx;b+=gx*gy;c+=gy*gy;
+   }
+   var disc=Math.sqrt(Math.max(0,(a-c)*(a-c)+4*b*b));
+   var score=(a+c-disc)*0.5;
+   if(score>maxScore)maxScore=score;
+   if(score>0)candidates.push({x:x,y:y,score:score});
+  }
+ }
+ if(!candidates.length||maxScore<1) return cv.matFromArray(0,1,cv.CV_32FC2,[]);
+ candidates.sort(function(a,b){return b.score-a.score});
+ function choose(threshold){
+  var selected=[];
+  for(var i=0;i<candidates.length&&selected.length<180;i++){
+   var p=candidates[i];if(p.score<threshold)break;
+   var spaced=true;
+   for(var j=0;j<selected.length;j++){var dx=p.x-selected[j].x,dy=p.y-selected[j].y;if(dx*dx+dy*dy<64){spaced=false;break}}
+   if(spaced)selected.push(p);
+  }
+  return selected;
+ }
+ var selected=choose(Math.max(2,maxScore*.008));
+ if(selected.length<12)selected=choose(Math.max(.5,maxScore*.001));
+ var flat=[];selected.forEach(function(p){flat.push(p.x,p.y)});
+ return cv.matFromArray(selected.length,1,cv.CV_32FC2,flat);
+}
 async function finishCalibration(){setStep(4);status('Initialisation du suivi sur la surface de la stèle…');trackCanvas.width=640;trackCanvas.height=Math.round(640*video.videoHeight/video.videoWidth);var taps=calibration.map(function(p){return{x:p.x/stage.clientWidth*trackCanvas.width,y:p.y/stage.clientHeight*trackCanvas.height}}),gray=grabGray();tracker={H:[1,0,0,0,1,0,0,0,1],initialTaps:taps,prevGray:gray,prevPoints:null,frames:0,lastReplenish:0};tracker.prevPoints=detectFeatures(gray,taps);if(tracker.prevPoints.rows<12){tracker.prevPoints.delete();tracker.prevGray.delete();tracker=null;throw Error('Trop peu de détails dans ce cadrage. Rapproche-toi de la stèle et recommence.')}markers.innerHTML='';document.getElementById('opacityBar').hidden=false;restorationVisible=true;document.getElementById('toggleOverlay').textContent='Masquer la restitution';updateOverlay();tracking=true;status('Calage effectué. Bouge doucement le téléphone ; le suivi peut demander un recalage.','good');lastTick=0;raf=requestAnimationFrame(trackFrame)}
 function trackFrame(now){if(!tracking||!tracker)return;if(now-lastTick<90){raf=requestAnimationFrame(trackFrame);return}lastTick=now;var cur=null,next=null,st=null,err=null,src=null,dst=null,mask=null,H=null;try{cur=grabGray();next=new cv.Mat();st=new cv.Mat();err=new cv.Mat();cv.calcOpticalFlowPyrLK(tracker.prevGray,cur,tracker.prevPoints,next,st,err,new cv.Size(21,21),3,new cv.TermCriteria(cv.TERM_CRITERIA_EPS|cv.TERM_CRITERIA_COUNT,30,.01));var from=[],to=[];for(var i=0;i<tracker.prevPoints.rows;i++){if(st.data[i]===1&&err.data32F[i]<45){from.push(tracker.prevPoints.data32F[2*i],tracker.prevPoints.data32F[2*i+1]);to.push(next.data32F[2*i],next.data32F[2*i+1])}}if(to.length/2<12)throw Error('tracking-lost');src=cv.matFromArray(to.length/2,1,cv.CV_32FC2,from);dst=cv.matFromArray(to.length/2,1,cv.CV_32FC2,to);mask=new cv.Mat();H=cv.findHomography(src,dst,cv.RANSAC,4,mask);if(!H||H.empty())throw Error('tracking-lost');var inliers=0;for(var q=0;q<mask.data.length;q++)if(mask.data[q])inliers++;if(inliers<9)throw Error('tracking-lost');var h=Array.from(H.data64F||H.data32F),scale=h[8]||1;for(var z=0;z<9;z++)h[z]/=scale;tracker.H=mul3(h,tracker.H);tracker.frames++;tracker.prevGray.delete();tracker.prevGray=cur;cur=null;tracker.prevPoints.delete();tracker.prevPoints=cv.matFromArray(to.length/2,1,cv.CV_32FC2,to);if(tracker.prevPoints.rows<50&&tracker.frames-tracker.lastReplenish>12){var fresh=detectFeatures(tracker.prevGray,tracker.initialTaps);if(fresh.rows>=20){tracker.prevPoints.delete();tracker.prevPoints=fresh}else fresh.delete();tracker.lastReplenish=tracker.frames}updateOverlay();if(tracker.frames%20===0)status('Suivi actif : '+inliers+' détails suivis. Si l’alignement dérive, appuie sur Recalibrer.','good')}catch(e){stopTracking();overlay.style.display='none';status(e.message==='tracking-lost'?'Suivi perdu. Garde la stèle dans le cadre et appuie sur Recalibrer.':'Problème de suivi. Recalibre la stèle.','bad')}finally{[next,st,err,src,dst,mask,H,cur].forEach(function(m){if(m&&m.delete)m.delete()})}if(tracking)raf=requestAnimationFrame(trackFrame)}
 function stopTracking(){tracking=false;if(raf)cancelAnimationFrame(raf);raf=0;if(tracker){try{if(tracker.prevGray)tracker.prevGray.delete();if(tracker.prevPoints)tracker.prevPoints.delete()}catch(e){}tracker=null}}
