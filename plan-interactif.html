@@ -309,7 +309,9 @@ function select(id){
  addMeta(grid,'Nationalité validée dans le classeur',r.nationalityValidation);
  addMeta(grid,'Texte complet actuel pour contrôle',r.fullBaseText);
  details.appendChild(grid);box.appendChild(details);
- const action=document.createElement('div');action.style.marginTop='12px';const b=document.createElement('button');b.className='btn';b.textContent='Copier les informations de la fiche';b.onclick=()=>{const content=[r.title,r.name,r.nationality,statusHuman(r),r.physicalInscriptionState,r.epigraphicText,r.archiveComplements,r.fullBaseText,r.sourceNotes].filter(Boolean).join('\\n\\n');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(content).then(()=>{b.textContent='Informations copiées'}).catch(()=>{})}};action.appendChild(b);box.appendChild(action);
+ const action=document.createElement('div');action.style.marginTop='12px';action.style.display='flex';action.style.flexWrap='wrap';action.style.gap='8px';const b=document.createElement('button');b.className='btn';b.textContent='Copier les informations de la fiche';b.onclick=()=>{const content=[r.title,r.name,r.nationality,statusHuman(r),r.physicalInscriptionState,r.epigraphicText,r.archiveComplements,r.fullBaseText,r.sourceNotes].filter(Boolean).join('\\n\\n');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(content).then(()=>{b.textContent='Informations copiées'}).catch(()=>{})}};action.appendChild(b);
+ if(id==='5'){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-correard-manuel.html';ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}
+ box.appendChild(action);
  const nameSelect=document.getElementById('nameSelect');nameSelect.value=r.hasName?r.id:'';
 }
 function renderOssuary(){
@@ -324,5 +326,5 @@ document.getElementById('natFilter').addEventListener('change',applyFilters);
 document.getElementById('insFilter').addEventListener('change',applyFilters);
 document.getElementById('numToggle').addEventListener('change',e=>svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=e.target.checked?'':'none'));
 document.getElementById('nameSelect').addEventListener('change',e=>{if(e.target.value)select(e.target.value)});
-initMap();applyFilters();renderZoom();select('7');
+initMap();applyFilters();renderZoom();const requestedTomb=new URLSearchParams(window.location.search).get('tombe');select(requestedTomb&&byId[requestedTomb]?requestedTomb:'7');
 </script></body></html>
