@@ -33,8 +33,8 @@ async function loadScriptFrom(url){
   script.async=true;
   script.crossOrigin='anonymous';
   script.src=url;
-  script.onload=function(){resolve()};
-  script.onerror=function(){script.remove();reject(new Error('Téléchargement refusé ou indisponible'))};
+  script.onload=function(){script.dataset.finished='1';resolve()};
+  script.onerror=function(){script.dataset.finished='1';script.remove();reject(new Error('Téléchargement refusé ou indisponible'))};
   document.head.appendChild(script);
   setTimeout(function(){if(!script.dataset.finished){script.dataset.finished='1';if(!script.isConnected)return;script.remove();reject(new Error('Délai de téléchargement dépassé'))}},15000);
  });
