@@ -52,8 +52,13 @@ window.MEMOIRE_CONFIG = {
       mapAttribution: "Fond de carte OpenStreetMap · imagerie satellite © Esri",
       mapSatellite: "Vue satellite",
       mapStreet: "Plan classique",
-      cameraTitle: "Visez la plaque de l’ossuaire",
+      cameraTitle: "Visez une plaque commémorative",
       cameraIntro: "Présentez la plaque entière, plutôt de face, avec un éclairage régulier. La première préparation de la cible peut prendre un moment.",
+      arIntroTitle: "Deux façons de découvrir les inscriptions",
+      arCaseAutoTitle: "1. Reconnaissance automatique d’une plaque",
+      arCaseAutoText: "Activez la caméra et présentez la plaque commémorative de l’ossuaire, entière et plutôt de face. Lorsqu’elle est reconnue, sa transcription et les ressources associées s’affichent. La plaque n’apparaît pas à l’écran avant sa détection.",
+      arCaseManualTitle: "2. Reconstitution guidée d’une tombe",
+      arCaseManualText: "Pour certaines stèles, ouvrez d’abord la fiche correspondante dans le Plan interactif des tombes, puis choisissez « Essayer la restitution guidée sur place ». La caméra vous guidera pour caler manuellement le calque sur la pierre ; ce mode ne repose pas sur la reconnaissance automatique de la tombe.",
       startCamera: "Activer la caméra",
       stopCamera: "Arrêter la caméra",
       transcript: "Transcription de la plaque",
@@ -713,15 +718,8 @@ window.MEMOIRE_CONFIG = {
 })();
 
 
-// Corréard AR: full-stone recognition guidance and opacity control.
-(() => {
- const U=window.MEMOIRE_CONFIG.ui;
- Object.assign(U.fr,{cameraTitle:"Cadrez la pierre tombale de Corréard",cameraIntro:"Cadrez toute la pierre, plutôt de face. La détection s’appuie sur sa silhouette et sa texture, pas sur la lecture de l’épitaphe.",overlayOpacity:"Opacité de la reconstitution"});
- Object.assign(U.vi,{cameraTitle:"Lấy toàn bộ bia mộ Corréard vào khung hình",cameraIntro:"Hướng camera gần chính diện và lấy trọn bia mộ. Nhận diện dựa trên hình dáng và bề mặt đá, không dựa vào việc đọc dòng chữ.",overlayOpacity:"Độ trong suốt của bản phục dựng"});
- Object.assign(U.en,{cameraTitle:"Frame Corréard’s whole tombstone",cameraIntro:"Frame the entire stone, preferably face-on. Detection uses the stone’s silhouette and surface texture, not the readability of the epitaph.",overlayOpacity:"Restoration opacity"});
- Object.assign(U.es,{cameraTitle:"Encuadre toda la lápida de Corréard",cameraIntro:"Encuadre la piedra completa, preferiblemente de frente. La detección utiliza la silueta y la textura de la piedra, no la lectura del epitafio.",overlayOpacity:"Opacidad de la reconstrucción"});
- Object.assign(U.ru,{cameraTitle:"Наведите камеру на весь памятник Корреара",cameraIntro:"Покажите камере весь камень, по возможности прямо. Распознавание опирается на контур и текстуру камня, а не на читаемость эпитафии.",overlayOpacity:"Непрозрачность реконструкции"});
-})();
+// Generic AR guidance; the automatic camera mode recognizes configured commemorative plaques.
+(()=>{const U=window.MEMOIRE_CONFIG.ui;Object.assign(U.fr,{overlayOpacity:"Opacité de la reconstitution"});Object.assign(U.vi,{overlayOpacity:"Độ trong suốt của bản phục dựng"});Object.assign(U.en,{overlayOpacity:"Restoration opacity"});Object.assign(U.es,{overlayOpacity:"Opacidad de la reconstrucción"});Object.assign(U.ru,{overlayOpacity:"Непрозрачность реконструкции"});})();
 
 /* Interactive cemetery plan entry. The detailed plan is local and does not depend on GPS. */
 (() => {
