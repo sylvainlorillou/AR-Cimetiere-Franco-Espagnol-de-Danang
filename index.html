@@ -75,7 +75,7 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
     <div class="card"><div class="card-top"><div class="icon-box">⌖</div><h3 data-i18n="mapTitle">Se repérer sur le site</h3></div><p data-i18n="mapIntro">La position du cimetière est indicative. Les repères internes seront ajoutés après relevé.</p><p><button class="secondary" onclick="window.location.href='./plan-interactif.html'" data-i18n="seeMap">Voir la carte</button></p></div>
     <div class="card"><div class="card-top"><div class="icon-box">◎</div><h3 data-i18n="trailTitle">Votre parcours de découverte</h3></div><p data-i18n="trailIntro">Repérez les éléments patrimoniaux, scannez leurs plaques et ouvrez leurs fiches historiques.</p><p><button class="secondary" onclick="showPage('arPage')" data-i18n="scanPlaque">Reconnaître une plaque</button></p></div>
   </div>
-  <div class="card"><div class="card-top"><div class="icon-box">♙</div><div><h3 data-i18n="peopleTitle">Les personnes citées sur la plaque</h3><p data-i18n="peopleIntro">Les notices biographiques seront ajoutées après vérification des sources.</p></div></div><button class="secondary" onclick="window.location.href='./biographies.html'" data-i18n="peopleButton">Découvrir les biographies</button></div>
+  <div class="card"><div class="card-top"><div class="icon-box">♙</div><div><h3 data-i18n="peopleTitle">Biographies des personnes identifiées</h3><p data-i18n="peopleIntro">Consultez les notices des personnes identifiées dans les données historiques disponibles.</p></div></div><button class="secondary" onclick="window.location.href='./biographies.html'" data-i18n="peopleButton">Découvrir les biographies</button></div>
   <div class="card">
     <span class="pill" data-i18n="progress">Repères découverts</span>
     <div class="progressbar"><span id="progressFill"></span></div>
@@ -174,7 +174,7 @@ R. I. P.</div>
   <button class="navbtn" onclick="window.location.href='./plan-interactif.html'"><span class="navicon">⌖</span><span>Carte</span></button>
   <button class="navbtn" data-page="arPage" onclick="showPage('arPage')"><span class="navicon">◎</span><span>Reconnaître</span></button>
   <button class="navbtn" onclick="window.location.href='./reconstituer.html'"><span class="navicon">▧</span><span>Reconstituer</span></button>
-  <button class="navbtn" data-page="peoplePage" onclick="showPage('peoplePage')"><span class="navicon">♙</span><span>Personnes</span></button>
+  <button class="navbtn" onclick="window.location.href='./biographies.html'"><span class="navicon">♙</span><span>Biographies</span></button>
   <button class="navbtn" data-page="sourcesPage" onclick="showPage('sourcesPage')"><span class="navicon">▤</span><span>Sources</span></button>
 </nav>
 </div>
