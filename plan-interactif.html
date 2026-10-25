@@ -291,7 +291,7 @@ function select(id){
  if(r.reconstructionImage&&IMG_DATA[r.id]){
   const fig=document.createElement('figure');fig.className='reconstruction';
   const image=document.createElement('img');image.src=IMG_DATA[r.id];image.alt='Reconstitution de la tombe '+r.id+' — '+(r.name||'');fig.appendChild(image);
-  const caption=document.createElement('figcaption');caption.textContent='Reconstitution fournie pour cette tombe. Image affichée comme référence de conception ; son alignement en réalité augmentée sera traité ultérieurement.';fig.appendChild(caption);box.appendChild(fig);
+  const caption=document.createElement('figcaption');caption.textContent=(['7','8','15'].includes(String(id)))?'Calque préparé pour une restitution guidée sur place. Tu pourras régler la transparence et comparer l’inscription à la stèle réelle.':'Reconstitution fournie pour cette tombe. Image affichée comme référence de conception ; son alignement en réalité augmentée sera traité ultérieurement.';fig.appendChild(caption);box.appendChild(fig);
  }
  const st=document.createElement('div');st.className='condition data-block';const sh=document.createElement('h3');sh.textContent='État physique de l’inscription';const sp=document.createElement('p');sp.textContent=r.physicalInscriptionState||'Non renseigné dans le classeur';st.append(sh,sp);box.appendChild(st);
  const trans=fieldBlock('Transcription / information épigraphique proposée',r.epigraphicText,'quote');if(trans)box.appendChild(trans);
@@ -310,7 +310,7 @@ function select(id){
  addMeta(grid,'Texte complet actuel pour contrôle',r.fullBaseText);
  details.appendChild(grid);box.appendChild(details);
  const action=document.createElement('div');action.style.marginTop='12px';action.style.display='flex';action.style.flexWrap='wrap';action.style.gap='8px';const b=document.createElement('button');b.className='btn';b.textContent='Copier les informations de la fiche';b.onclick=()=>{const content=[r.title,r.name,r.nationality,statusHuman(r),r.physicalInscriptionState,r.epigraphicText,r.archiveComplements,r.fullBaseText,r.sourceNotes].filter(Boolean).join('\\n\\n');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(content).then(()=>{b.textContent='Informations copiées'}).catch(()=>{})}};action.appendChild(b);
- if(id==='5'){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-correard-manuel.html';ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}
+ if(id==='5'){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-correard-manuel.html';ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}else if(['7','8','15'].includes(String(id))){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-restitution-guidee.html?tombe='+encodeURIComponent(String(id));ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}
  box.appendChild(action);
  const nameSelect=document.getElementById('nameSelect');nameSelect.value=r.hasName?r.id:'';
 }
