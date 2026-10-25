@@ -792,5 +792,6 @@ function applyUserLocation(){
 }
 setLanguage(currentLanguage);
 renderPeople();renderTranslation(0);updateProgress();
+if(new URLSearchParams(window.location.search).get('vue')==='ar')showPage('arPage');
 </script>
 </body></html>
