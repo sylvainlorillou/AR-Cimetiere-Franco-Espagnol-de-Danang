@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="theme-color" content="#243b32"><title>Mémoire vivante — Restitution guidée</title>
+<style>
+:root{--ink:#22382e;--green:#365c49;--paper:#f5f2eb;--card:#fffdf8;--line:#e2dccf;--muted:#68756c}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}.app{max-width:760px;margin:auto;padding:0 13px 28px}header{padding:18px 2px}.back{display:inline-block;margin-bottom:13px;padding:8px 10px;border:1px solid var(--line);border-radius:8px;color:var(--green);text-decoration:none;font-size:11px;font-weight:750;background:var(--card)}.eyebrow{font-size:10px;letter-spacing:1.7px;text-transform:uppercase;font-weight:850;color:var(--green)}h1{font:500 clamp(25px,5vw,34px)/1.1 Georgia,serif;margin:8px 0}header p{font-size:13px;line-height:1.55;color:var(--muted);margin:0}.panel{background:var(--card);border:1px solid var(--line);border-radius:15px;overflow:hidden;margin-bottom:13px}.head{padding:13px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:10px;align-items:center}.head h2{font:500 19px Georgia,serif;margin:0}.small{font-size:10px;color:var(--muted)}.note{margin:12px 13px;padding:11px 12px;background:#edf2e9;border-radius:9px;font-size:11px;line-height:1.55;color:#395544}.controls{display:flex;gap:8px;flex-wrap:wrap;padding:12px 13px}.btn{border:1px solid #d8d2c5;border-radius:9px;padding:12px 14px;background:#fffdf8;color:var(--ink);font-size:12px;font-weight:750}.primary{background:var(--green);border-color:var(--green);color:white}.btn:disabled{opacity:.45}.stage-shell{display:flex;justify-content:center;background:#17221d;min-height:80px}.stage{position:relative;display:none;overflow:hidden;background:#101614;touch-action:manipulation;cursor:crosshair}.stage video{position:absolute;inset:0;width:100%;height:100%;object-fit:fill}.stage #restoration{position:absolute;left:0;top:0;width:300px;height:431.262px;transform-origin:0 0;display:none;max-width:none;pointer-events:none}.stage svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.point{fill:#f8d88e;stroke:#1a2d22;stroke-width:3}.point-label{font:800 18px system-ui;fill:#172c25;paint-order:stroke;stroke:#fffdf8;stroke-width:3px}.steps{display:flex;gap:6px;padding:12px 13px 0}.step{width:28px;height:28px;display:grid;place-items:center;border-radius:50%;background:#efeee7;color:#667268;font-size:11px;font-weight:800}.step.active{background:var(--green);color:white}.step.done{background:#dce9d8;color:#285837}.instructions{padding:10px 14px}.instructions h3{font:500 18px Georgia,serif;margin:0 0 5px}.instructions p{font-size:12px;line-height:1.55;color:var(--muted);margin:0}.status{font-size:11px;font-weight:750;padding:10px 13px;border-top:1px solid var(--line);line-height:1.5;background:#f7f5ee;color:#5d665f}.status.good{background:#eef5eb;color:#285837}.status.bad{background:#fbefec;color:#8a3b32}.opacitybar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:11px 13px;border-top:1px solid var(--line);font-size:11px;font-weight:750}.opacitybar label{display:flex;align-items:center;gap:9px;flex:1;min-width:210px}.opacitybar input{flex:1;accent-color:var(--green);min-width:70px}.opacitybar output{min-width:38px;text-align:right}.preview{display:flex;justify-content:center;padding:14px;background:#f7f4ec}.preview img{max-height:250px;max-width:100%;object-fit:contain}.info{padding:13px;font-size:11px;line-height:1.6;color:var(--muted)}
+@media(min-width:580px){.stage-shell{padding:12px}.stage{border-radius:10px}}
+</style></head><body><div class="app">
+<header><a class="back" href="./plan-interactif.html">← Retour au plan du cimetière</a><div class="eyebrow">Mémoire vivante · mode guidé</div><h1>Restitution guidée d’une stèle</h1><p>La caméra n’identifie pas automatiquement la tombe. Tu indiques quatre repères adaptés à la stèle choisie ; le suivi optique tente ensuite de maintenir le calque aligné pendant les petits mouvements du téléphone.</p></header>
+<section class="panel"><div class="head"><h2>Calage manuel de la stèle</h2><span class="small">Tombe n° 5</span></div><div class="note">Place-toi au bout de la tombe, face à la stèle. Cadre toute la stèle, assez près pour distinguer son contour. Touche ensuite les quatre repères demandés, dans l’ordre.</div>
+<div class="controls"><button id="startBtn" class="btn primary">Activer la caméra</button><button id="stopBtn" class="btn" disabled>Arrêter</button><button id="recalBtn" class="btn" disabled>Recalibrer</button></div>
+<div class="stage-shell"><div class="stage" id="stage"><video id="video" autoplay playsinline muted></video><img id="restoration" src="./gout_overlay.svg" alt="Calque de restitution de la stèle"><svg id="markers" viewBox="0 0 100 100" preserveAspectRatio="none"></svg></div></div>
+<div class="steps"><span class="step active">1</span><span class="step">2</span><span class="step">3</span><span class="step">4</span></div><div class="instructions"><h3 id="stepTitle">Active la caméra pour commencer</h3><p id="stepText">Les inscriptions, la peinture et la végétation ne servent pas à identifier la tombe.</p></div><div id="status" class="status" role="status" aria-live="polite">En attente de la caméra.</div><div class="opacitybar" id="opacityBar" hidden><label for="opacitySlider">Opacité de la restitution <input id="opacitySlider" type="range" min="45" max="100" value="90"><output id="opacityValue">90 %</output></label><button id="toggleOverlay" class="btn" type="button">Masquer la restitution</button></div></section>
+<section class="panel"><div class="head"><h2>Aperçu de la reconstitution</h2><span class="small">Image de référence</span></div><div class="preview"><img src="./gout_overlay.svg" alt="Calque graphique de restitution de la stèle"></div><div class="info">Le calque utilise un fond pierre uniforme pour faciliter la lecture des lettres. Règle sa transparence pour comparer l’inscription restituée à la stèle réelle. Si le suivi perd la stèle ou si l’alignement devient douteux, l’image est masquée et un nouveau calage est nécessaire.</div></section>
+</div>
+<script>
+var video=document.getElementById('video'),stage=document.getElementById('stage'),overlay=document.getElementById('restoration'),markers=document.getElementById('markers'),statusEl=document.getElementById('status');
+
+var GUIDE_CONFIGS={
+ "7":{id:"7",name:"Gout",title:"Restituer l’épitaphe de Gout",overlay:"./gout_overlay.svg",w:815,h:1400,
+  anchors:[{x:406,y:13},{x:76,y:305},{x:739,y:305},{x:407,y:1388}],
+  steps:[
+   {title:"1/4 — Sommet de la stèle",text:"Touche le point le plus haut du contour de la stèle, au milieu, près du sommet de la croix."},
+   {title:"2/4 — Épaule gauche",text:"À gauche, touche la jonction où la grande courbe supérieure rejoint l’épaulement horizontal et le flanc latéral."},
+   {title:"3/4 — Épaule droite",text:"À droite, touche la jonction où la grande courbe supérieure rejoint l’épaulement horizontal et le flanc latéral."},
+   {title:"4/4 — Pied de la stèle",text:"Touche le milieu du bord inférieur de la pierre, sans viser le sol ou le bout de tombe au premier plan."}
+  ]},
+ "8":{id:"8",name:"Labbé Victor Eugène",title:"Restituer l’épitaphe de Labbé Victor Eugène",overlay:"./labbe_overlay.svg",w:817,h:1400,
+  anchors:[{x:408,y:8},{x:79,y:315},{x:739,y:315},{x:408,y:1390}],
+  steps:[
+   {title:"1/4 — Sommet de la stèle",text:"Touche le point le plus haut du contour extérieur, au milieu, au sommet de l’arche et de la croix."},
+   {title:"2/4 — Épaule gauche",text:"À gauche, touche la jonction entre la courbe de l’arche et l’épaulement horizontal du flanc."},
+   {title:"3/4 — Épaule droite",text:"À droite, touche la jonction entre la courbe de l’arche et l’épaulement horizontal du flanc."},
+   {title:"4/4 — Pied de la stèle",text:"Touche le milieu du bord inférieur de la pierre, sans viser le sol ou le bout de tombe au premier plan."}
+  ]},
+ "15":{id:"15",name:"Gascon Cadaubon",title:"Restituer l’épitaphe de Gascon Cadaubon",overlay:"./gascon_cadaubon_overlay.svg",w:811,h:1400,
+  anchors:[{x:405,y:5},{x:13,y:316},{x:798,y:316},{x:405,y:1391}],
+  steps:[
+   {title:"1/4 — Sommet de l’arche centrale",text:"Touche le point le plus haut de la grande arche centrale, au milieu du sommet arrondi."},
+   {title:"2/4 — Épaule gauche",text:"À gauche, touche la jonction entre le lobe arrondi latéral et le flanc extérieur presque vertical."},
+   {title:"3/4 — Épaule droite",text:"À droite, touche la jonction entre le lobe arrondi latéral et le flanc extérieur presque vertical."},
+   {title:"4/4 — Pied de la stèle",text:"Touche le milieu du bord inférieur de la pierre, au-dessus de la dalle basse."}
+  ]}
+};
+var GUIDE_CONFIG=GUIDE_CONFIGS[new URLSearchParams(window.location.search).get("tombe")]||GUIDE_CONFIGS["7"];
+document.title="Mémoire vivante — Restitution guidée · "+GUIDE_CONFIG.name;
+var backLink=document.querySelector("header .back");
+backLink.href="./plan-interactif.html?tombe="+GUIDE_CONFIG.id;
+backLink.textContent="← Retour à la tombe n° "+GUIDE_CONFIG.id;
+document.querySelector("header h1").textContent=GUIDE_CONFIG.title;
+document.querySelector("header p").textContent="La caméra n’identifie pas automatiquement la tombe. Tu indiques quatre repères de forme adaptés à cette stèle ; le suivi optique tente ensuite de maintenir la restitution alignée pendant les petits mouvements du téléphone.";
+document.querySelector(".head .small").textContent="Tombe n° "+GUIDE_CONFIG.id;
+document.querySelector(".note").textContent="Place-toi au bout de la tombe, face à la stèle. Cadre la stèle entière. Touche les quatre repères jaunes dans l’ordre indiqué ; les points sont adaptés à la forme de cette pierre.";
+overlay.src=GUIDE_CONFIG.overlay;
+overlay.alt="Calque de restitution guidée — "+GUIDE_CONFIG.name;
+overlay.style.width="300px";
+overlay.style.height=(300*GUIDE_CONFIG.h/GUIDE_CONFIG.w)+"px";
+var previewImg=document.querySelector(".preview img");
+previewImg.src=GUIDE_CONFIG.overlay;
+previewImg.alt="Calque à fond pierre uniforme — "+GUIDE_CONFIG.name;
+
+var sourceAnchors=GUIDE_CONFIG.anchors.map(function(p){return{x:p.x*300/GUIDE_CONFIG.w,y:p.y*300/GUIDE_CONFIG.w}});
+var stepInfo=GUIDE_CONFIG.steps;
+var stream=null,cvReady=false,calibration=[],step=0,tracker=null,tracking=false,raf=0,lastTick=0,restorationVisible=true;
+var trackCanvas=document.createElement('canvas'),trackCtx=trackCanvas.getContext('2d',{willReadFrequently:true});
+function status(message,kind){statusEl.textContent=message;statusEl.className='status '+(kind||'')}
+function stageSize(){if(!video.videoWidth||!video.videoHeight)return;var maxH=Math.min(window.innerHeight*.66,680),ratio=video.videoWidth/video.videoHeight,w=Math.max(240,Math.min(stage.parentElement.clientWidth,maxH*ratio));stage.style.width=w+'px';stage.style.height=(w/ratio)+'px';stage.style.display='block';trackCanvas.width=640;trackCanvas.height=Math.max(1,Math.round(640*video.videoHeight/video.videoWidth))}
+let cvLoadPromise=null;
+let pendingCvRuntime=null;
+function delay(ms){return new Promise(function(resolve){setTimeout(resolve,ms)})}
+async function loadScriptFrom(url){
+ await new Promise(function(resolve,reject){
+  const script=document.createElement('script');
+  script.async=true;
+  script.crossOrigin='anonymous';
+  script.src=url;
+  script.onload=function(){script.dataset.finished='1';resolve()};
+  script.onerror=function(){script.dataset.finished='1';script.remove();reject(new Error('Téléchargement refusé ou indisponible'))};
+  document.head.appendChild(script);
+  setTimeout(function(){if(!script.dataset.finished){script.dataset.finished='1';if(!script.isConnected)return;script.remove();reject(new Error('Délai de téléchargement dépassé'))}},15000);
+ });
+ const deadline=Date.now()+18000;
+ let localPromise=null,localSource=null;
+ while(Date.now()<deadline){
+  let candidate=window.cv;
+  if(candidate&&typeof candidate.then==='function'){
+   if(localSource!==candidate){
+    localSource=candidate;
+    localPromise=Promise.resolve(candidate).then(function(value){return {ok:true,value:value}},function(error){return {ok:false,error:error}});
+   }
+   const result=await Promise.race([localPromise,delay(200).then(function(){return {pending:true}})]);
+   if(result.pending)continue;
+   if(!result.ok)throw new Error('Initialisation WebAssembly refusée : '+(result.error&&result.error.message||result.error||'erreur inconnue'));
+   candidate=result.value;
+   window.cv=candidate;
+  }
+  if(candidate&&typeof candidate.Mat==='function'&&typeof candidate.calcOpticalFlowPyrLK==='function'&&typeof candidate.findHomography==='function')return candidate;
+  await delay(100);
+ }
+ throw new Error('Le script a été téléchargé, mais le moteur OpenCV n’a pas exposé les fonctions de suivi requises.');
+}
+function waitForCV(){
+ if(cvLoadPromise)return cvLoadPromise;
+ cvLoadPromise=(async function(){
+  if(window.cv&&typeof window.cv.Mat==='function'&&typeof window.cv.calcOpticalFlowPyrLK==='function')return window.cv;
+  const sources=[
+   {label:'jsDelivr · OpenCV.js 5',url:'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@5.0.0-release.1/dist/opencv.js'},
+   {label:'unpkg · OpenCV.js 5',url:'https://unpkg.com/@techstark/opencv-js@5.0.0-release.1/dist/opencv.js'},
+   {label:'jsDelivr · OpenCV.js 3',url:'https://cdn.jsdelivr.net/npm/opencv.js@1.2.1/opencv.js'},
+   {label:'unpkg · OpenCV.js 3',url:'https://unpkg.com/opencv.js@1.2.1/opencv.js'},
+   {label:'Documentation OpenCV',url:'https://docs.opencv.org/4.13.0/opencv.js'}
+  ];
+  const errors=[];
+  for(const source of sources){
+   status('Tentative de chargement du moteur : '+source.label+'…');
+   try{
+    window.cv=undefined;
+    pendingCvRuntime=null;
+    await loadScriptFrom(source.url);
+    return window.cv;
+   }catch(err){
+    errors.push(source.label+' : '+(err&&err.message||String(err)));
+   }
+  }
+  throw new Error('Impossible de charger OpenCV.js depuis les sources disponibles. '+errors.join(' | '));
+ })().catch(function(err){cvLoadPromise=null;pendingCvRuntime=null;throw err});
+ return cvLoadPromise;
+}
+async function startCamera(){document.getElementById('startBtn').disabled=true;status('Activation de la caméra…');try{if(!navigator.mediaDevices||!navigator.mediaDevices.getUserMedia)throw new Error('Caméra non accessible : ouvre cette page en HTTPS dans un navigateur compatible.');stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:{ideal:'environment'},width:{ideal:1280},height:{ideal:720}}});video.srcObject=stream;await video.play();stageSize();window.addEventListener('resize',onResize);status('Chargement du suivi optique…');await waitForCV();cvReady=true;document.getElementById('stopBtn').disabled=false;document.getElementById('recalBtn').disabled=false;status('Moteur prêt. Suis les quatre consignes et touche chaque repère sur la stèle.','good');setStep(0)}catch(e){status(e.message||'Caméra indisponible. Vérifie les autorisations et utilise le site en HTTPS.','bad');document.getElementById('startBtn').disabled=false;if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}video.srcObject=null;stage.style.display='none';window.removeEventListener('resize',onResize)}}
+function onResize(){if(!stream)return;stopTracking();stageSize();if(calibration.length){resetCalibration();status('L’écran a changé de taille : refais le calage.','bad')}}
+function setStep(i){step=i;document.getElementById('stepTitle').textContent=i<4?stepInfo[i].title:'Calage terminé';document.getElementById('stepText').textContent=i<4?stepInfo[i].text:'La restitution est affichée. Bouge doucement le téléphone, sans sortir la stèle du cadre.';document.querySelectorAll('.step').forEach(function(n,j){n.classList.toggle('active',j===i);n.classList.toggle('done',j<i||i===4)})}
+function localPoint(e){var r=stage.getBoundingClientRect();return{x:e.clientX-r.left,y:e.clientY-r.top}}
+function drawMarkers(){markers.setAttribute('viewBox','0 0 '+stage.clientWidth+' '+stage.clientHeight);markers.innerHTML='';calibration.forEach(function(p,i){var c=document.createElementNS('http://www.w3.org/2000/svg','circle');c.setAttribute('cx',p.x);c.setAttribute('cy',p.y);c.setAttribute('r',Math.max(7,stage.clientWidth*.018));c.setAttribute('class','point');markers.appendChild(c);var t=document.createElementNS('http://www.w3.org/2000/svg','text');t.setAttribute('x',p.x+10);t.setAttribute('y',p.y-9);t.setAttribute('class','point-label');t.textContent=String(i+1);markers.appendChild(t)})}
+stage.addEventListener('click',function(e){if(!stream||!cvReady||step>=4||tracking)return;var p=localPoint(e);if(p.x<0||p.y<0||p.x>stage.clientWidth||p.y>stage.clientHeight)return;calibration.push(p);drawMarkers();if(calibration.length<4){setStep(calibration.length);status('Repère '+calibration.length+'/4 enregistré. '+stepInfo[calibration.length].title+'.')}else finishCalibration().catch(function(err){status(err.message||'Le calage a échoué. Recommence en cadrant la stèle plus près.','bad');resetCalibration()})});
+function solveH(src,dst){var A=[],b=[];for(var i=0;i<4;i++){var x=src[i].x,y=src[i].y,u=dst[i].x,v=dst[i].y;A.push([x,y,1,0,0,0,-u*x,-u*y]);b.push(u);A.push([0,0,0,x,y,1,-v*x,-v*y]);b.push(v)}for(var col=0;col<8;col++){var pivot=col;for(var row=col+1;row<8;row++)if(Math.abs(A[row][col])>Math.abs(A[pivot][col]))pivot=row;if(Math.abs(A[pivot][col])<1e-9)throw Error('Les repères sont trop rapprochés. Recommence.');var tmp=A[col];A[col]=A[pivot];A[pivot]=tmp;var tb=b[col];b[col]=b[pivot];b[pivot]=tb;var d=A[col][col];for(var j=col;j<8;j++)A[col][j]/=d;b[col]/=d;for(var rr=0;rr<8;rr++)if(rr!==col){var k=A[rr][col];if(!k)continue;for(var jj=col;jj<8;jj++)A[rr][jj]-=k*A[col][jj];b[rr]-=k*b[col]}}return b.concat([1])}
+function mul3(a,b){var c=Array(9).fill(0);for(var r=0;r<3;r++)for(var col=0;col<3;col++)for(var k=0;k<3;k++)c[r*3+col]+=a[r*3+k]*b[k*3+col];return c}
+function proj(H,p){var d=H[6]*p.x+H[7]*p.y+H[8];return{x:(H[0]*p.x+H[1]*p.y+H[2])/d,y:(H[3]*p.x+H[4]*p.y+H[5])/d}}
+function cssH(H){var a=[H[0],H[3],0,H[6],H[1],H[4],0,H[7],0,0,1,0,H[2],H[5],0,1];return'matrix3d('+a.map(function(n){return Number(n.toFixed(7))}).join(',')+')'}
+function updateOverlay(){if(!tracker)return;var sw=stage.clientWidth,sh=stage.clientHeight,tw=trackCanvas.width,th=trackCanvas.height;var dst=tracker.initialTaps.map(function(p){return proj(tracker.H,p)}).map(function(p){return{x:p.x*sw/tw,y:p.y*sh/th}});overlay.style.transform=cssH(solveH(sourceAnchors,dst));overlay.style.opacity=Number(document.getElementById('opacitySlider').value)/100;overlay.style.display=restorationVisible?'block':'none'}
+function grabGray(){trackCtx.drawImage(video,0,0,trackCanvas.width,trackCanvas.height);var rgba=cv.imread(trackCanvas),gray=new cv.Mat();cv.cvtColor(rgba,gray,cv.COLOR_RGBA2GRAY);rgba.delete();return gray}
+function featureMask(gray,pts){var mask=cv.Mat.zeros(gray.rows,gray.cols,cv.CV_8UC1),order=[0,2,3,1],flat=[];order.forEach(function(i){flat.push(Math.round(pts[i].x),Math.round(pts[i].y))});var poly=cv.matFromArray(4,1,cv.CV_32SC2,flat),polys=new cv.MatVector();polys.push_back(poly);cv.fillPoly(mask,polys,new cv.Scalar(255));poly.delete();polys.delete();return mask}
+function pointInPoly(x,y,poly){var inside=false;for(var i=0,j=poly.length-1;i<poly.length;j=i++){var xi=poly[i].x,yi=poly[i].y,xj=poly[j].x,yj=poly[j].y;var cross=((yi>y)!==(yj>y))&&(x<(xj-xi)*(y-yi)/(yj-yi+1e-9)+xi);if(cross)inside=!inside}return inside}
+function detectFeatures(gray,initial){
+ var now=initial.map(function(p){return proj(tracker.H,p)}),poly=[now[0],now[2],now[3],now[1]];
+ // Prefer OpenCV's native Shi–Tomasi detector when this build exports it.
+ if(typeof cv.goodFeaturesToTrack==='function'){
+  var mask=null,pts=null;
+  try{
+   mask=featureMask(gray,now);pts=new cv.Mat();
+   cv.goodFeaturesToTrack(gray,pts,180,.01,5,mask);
+   if(pts.rows>=12){if(mask)mask.delete();return pts}
+  }catch(err){/* continue with the independent JavaScript detector */}
+  if(pts)pts.delete();if(mask)mask.delete();
+ }
+ // Some browser builds do not export goodFeaturesToTrack. Use a compact,
+ // pure-JavaScript Shi–Tomasi corner detector, restricted to the selected stela.
+ var w=gray.cols,h=gray.rows,pixels=gray.data;
+ if(!pixels||pixels.length<w*h)throw new Error('Le flux gris du suivi n’est pas disponible dans cette version d’OpenCV.');
+ function px(x,y){return pixels[y*w+x]}
+ var candidates=[],maxScore=0,margin=4,stepSize=3,rad=2;
+ for(var y=margin;y<h-margin;y+=stepSize){
+  for(var x=margin;x<w-margin;x+=stepSize){
+   if(!pointInPoly(x,y,poly))continue;
+   var a=0,b=0,c=0;
+   for(var dy=-rad;dy<=rad;dy++)for(var dx=-rad;dx<=rad;dx++){
+    var gx=(px(x+dx+1,y+dy)-px(x+dx-1,y+dy))*0.5;
+    var gy=(px(x+dx,y+dy+1)-px(x+dx,y+dy-1))*0.5;
+    a+=gx*gx;b+=gx*gy;c+=gy*gy;
+   }
+   var disc=Math.sqrt(Math.max(0,(a-c)*(a-c)+4*b*b));
+   var score=(a+c-disc)*0.5;
+   if(score>maxScore)maxScore=score;
+   if(score>0)candidates.push({x:x,y:y,score:score});
+  }
+ }
+ if(!candidates.length||maxScore<1) return new cv.Mat();
+ candidates.sort(function(a,b){return b.score-a.score});
+ function choose(threshold){
+  var selected=[];
+  for(var i=0;i<candidates.length&&selected.length<180;i++){
+   var p=candidates[i];if(p.score<threshold)break;
+   var spaced=true;
+   for(var j=0;j<selected.length;j++){var dx=p.x-selected[j].x,dy=p.y-selected[j].y;if(dx*dx+dy*dy<64){spaced=false;break}}
+   if(spaced)selected.push(p);
+  }
+  return selected;
+ }
+ var selected=choose(Math.max(2,maxScore*.008));
+ if(selected.length<12)selected=choose(Math.max(.5,maxScore*.001));
+ if(!selected.length)return new cv.Mat();
+ var flat=[];selected.forEach(function(p){flat.push(p.x,p.y)});
+ return cv.matFromArray(selected.length,1,cv.CV_32FC2,flat);
+}
+async function finishCalibration(){setStep(4);status('Initialisation du suivi sur la surface de la stèle…');trackCanvas.width=640;trackCanvas.height=Math.round(640*video.videoHeight/video.videoWidth);var taps=calibration.map(function(p){return{x:p.x/stage.clientWidth*trackCanvas.width,y:p.y/stage.clientHeight*trackCanvas.height}}),gray=grabGray();tracker={H:[1,0,0,0,1,0,0,0,1],initialTaps:taps,prevGray:gray,prevPoints:null,frames:0,lastReplenish:0};tracker.prevPoints=detectFeatures(gray,taps);if(tracker.prevPoints.rows<12){tracker.prevPoints.delete();tracker.prevGray.delete();tracker=null;throw Error('Trop peu de détails dans ce cadrage. Rapproche-toi de la stèle et recommence.')}markers.innerHTML='';document.getElementById('opacityBar').hidden=false;restorationVisible=true;document.getElementById('toggleOverlay').textContent='Masquer la restitution';updateOverlay();tracking=true;status('Calage effectué. Bouge doucement le téléphone ; le suivi peut demander un recalage.','good');lastTick=0;raf=requestAnimationFrame(trackFrame)}
+function trackFrame(now){if(!tracking||!tracker)return;if(now-lastTick<90){raf=requestAnimationFrame(trackFrame);return}lastTick=now;var cur=null,next=null,st=null,err=null,src=null,dst=null,mask=null,H=null;try{cur=grabGray();next=new cv.Mat();st=new cv.Mat();err=new cv.Mat();cv.calcOpticalFlowPyrLK(tracker.prevGray,cur,tracker.prevPoints,next,st,err,new cv.Size(21,21),3,new cv.TermCriteria(cv.TERM_CRITERIA_EPS|cv.TERM_CRITERIA_COUNT,30,.01));var from=[],to=[];for(var i=0;i<tracker.prevPoints.rows;i++){if(st.data[i]===1&&err.data32F[i]<45){from.push(tracker.prevPoints.data32F[2*i],tracker.prevPoints.data32F[2*i+1]);to.push(next.data32F[2*i],next.data32F[2*i+1])}}if(to.length/2<12)throw Error('tracking-lost');src=cv.matFromArray(to.length/2,1,cv.CV_32FC2,from);dst=cv.matFromArray(to.length/2,1,cv.CV_32FC2,to);mask=new cv.Mat();H=cv.findHomography(src,dst,cv.RANSAC,4,mask);if(!H||H.empty())throw Error('tracking-lost');var inliers=0;for(var q=0;q<mask.data.length;q++)if(mask.data[q])inliers++;if(inliers<9)throw Error('tracking-lost');var h=Array.from(H.data64F||H.data32F),scale=h[8]||1;for(var z=0;z<9;z++)h[z]/=scale;tracker.H=mul3(h,tracker.H);tracker.frames++;tracker.prevGray.delete();tracker.prevGray=cur;cur=null;tracker.prevPoints.delete();tracker.prevPoints=cv.matFromArray(to.length/2,1,cv.CV_32FC2,to);if(tracker.prevPoints.rows<50&&tracker.frames-tracker.lastReplenish>12){var fresh=detectFeatures(tracker.prevGray,tracker.initialTaps);if(fresh.rows>=20){tracker.prevPoints.delete();tracker.prevPoints=fresh}else fresh.delete();tracker.lastReplenish=tracker.frames}updateOverlay();if(tracker.frames%20===0)status('Suivi actif : '+inliers+' détails suivis. Si l’alignement dérive, appuie sur Recalibrer.','good')}catch(e){stopTracking();overlay.style.display='none';status(e.message==='tracking-lost'?'Suivi perdu. Garde la stèle dans le cadre et appuie sur Recalibrer.':'Problème de suivi. Recalibre la stèle.','bad')}finally{[next,st,err,src,dst,mask,H,cur].forEach(function(m){if(m&&m.delete)m.delete()})}if(tracking)raf=requestAnimationFrame(trackFrame)}
+function stopTracking(){tracking=false;if(raf)cancelAnimationFrame(raf);raf=0;if(tracker){try{if(tracker.prevGray)tracker.prevGray.delete();if(tracker.prevPoints)tracker.prevPoints.delete()}catch(e){}tracker=null}}
+function resetCalibration(){stopTracking();calibration=[];overlay.style.display='none';markers.innerHTML='';document.getElementById('opacityBar').hidden=true;restorationVisible=true;document.getElementById('opacitySlider').value='90';document.getElementById('opacityValue').textContent='90 %';document.getElementById('toggleOverlay').textContent='Masquer la restitution';setStep(0);document.getElementById('stepTitle').textContent='1/4 — Sommet arrondi';document.getElementById('stepText').textContent=stepInfo[0].text}
+function recalibrate(){resetCalibration();if(stream)status('Recommence au sommet, puis indique les deux épaules et le pied de la stèle.')}
+function stopCamera(){stopTracking();if(stream){stream.getTracks().forEach(function(t){t.stop()});stream=null}video.srcObject=null;stage.style.display='none';calibration=[];markers.innerHTML='';overlay.style.display='none';document.getElementById('opacityBar').hidden=true;restorationVisible=true;document.getElementById('opacitySlider').value='90';document.getElementById('opacityValue').textContent='90 %';document.getElementById('toggleOverlay').textContent='Masquer la restitution';window.removeEventListener('resize',onResize);document.getElementById('startBtn').disabled=false;document.getElementById('stopBtn').disabled=true;document.getElementById('recalBtn').disabled=true;status('Caméra arrêtée.');document.getElementById('stepTitle').textContent='Active la caméra pour commencer';document.getElementById('stepText').textContent='Le guide te demandera de toucher quatre points sur la stèle.';document.querySelectorAll('.step').forEach(function(n,i){n.classList.toggle('active',i===0);n.classList.remove('done')});step=0}
+document.getElementById('startBtn').addEventListener('click',startCamera);document.getElementById('stopBtn').addEventListener('click',stopCamera);document.getElementById('recalBtn').addEventListener('click',recalibrate);document.getElementById('opacitySlider').addEventListener('input',function(){document.getElementById('opacityValue').textContent=this.value+' %';overlay.style.opacity=String(Number(this.value)/100)});document.getElementById('toggleOverlay').addEventListener('click',function(){restorationVisible=!restorationVisible;this.textContent=restorationVisible?'Masquer la restitution':'Afficher la restitution';overlay.style.display=restorationVisible&&tracker?'block':'none'});window.addEventListener('pagehide',stopCamera);
+</script></body></html>
