@@ -53,12 +53,24 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
   <div class="hero">
     <div class="kicker" style="color:#e0c89f" data-i18n="kicker">Un lieu de mémoire à explorer</div>
     <div class="heritage-stamp">AECV</div>
-    <h1 data-i18n="heroTitle">Lire le lieu, retrouver les histoires.</h1>
-    <p data-i18n="heroSubtitle">Une découverte patrimoniale au cimetière franco-espagnol de Đà Nẵng, portée par l’AECV.</p>
-    <div class="actions"><button class="primary" onclick="window.location.href='./plan-interactif.html'" data-i18n="explore">Commencer la visite</button><button class="secondary" onclick="showPage('arPage')" data-i18n="scanPlaque">Reconnaître une plaque</button></div>
+    <h1 style="font-size:clamp(24px,4vw,34px)">Cimetière franco-espagnol de Tiên Sa — Đà Nẵng</h1>
+    <p>Un lieu de mémoire marqué par l’expédition franco-espagnole de 1858-1860, la résistance vietnamienne et une histoire funéraire qui se prolonge bien au-delà de cette période.</p><p>Aujourd’hui, les pierres et les épitaphes s’effacent peu à peu. À partir des recherches historiques, des archives et des observations de terrain, <strong>Mémoire vivante</strong> vous invite à explorer ce patrimoine, à retrouver les inscriptions et à découvrir les histoires que les monuments nous transmettent encore.</p><p>Le numérique ne remplace pas la conservation des lieux : il contribue à préserver et à transmettre les informations, tout en distinguant ce qui est établi de ce qui reste à découvrir.</p>
+    <div class="actions"><button class="primary" onclick="window.location.href='./plan-interactif.html'">Découvrir le cimetière</button><button class="secondary" onclick="document.getElementById('aboutProject').hidden=!document.getElementById('aboutProject').hidden">POUR EN SAVOIR PLUS</button></div>
   </div>
-  <div class="section-head"><div><div class="kicker">1858–1860 · Đà Nẵng</div><h2 data-i18n="contextTitle">Pourquoi ce cimetière ?</h2></div><span class="pill">AECV</span></div>
-  <p class="body-copy" data-i18n="contextText">Le cimetière franco-espagnol de Đà Nẵng, également connu sous le nom de Y Pha Nho, est un lieu de mémoire lié à l’expédition franco-espagnole de 1858–1860. « Mémoire vivante » propose de découvrir ce patrimoine à partir des monuments, des tombes, des inscriptions et des sources historiques, en distinguant les faits documentés des éléments qui restent à vérifier. La visite associe un plan interactif du cimetière à une expérience de réalité augmentée pour faire revivre les inscriptions sans remplacer ni altérer les traces originales.</p>
+  <section class="card" id="aboutProject" hidden>
+    <div class="kicker">Mémoire vivante</div><h2 style="margin:8px 0 16px">Le cimetière franco-espagnol de Tiên Sa — Đà Nẵng</h2>
+    <h3>Un lieu de mémoire, une histoire à redécouvrir</h3>
+    <p class="body-copy">Situé sur la péninsule de Tiên Sa, à Đà Nẵng, le cimetière militaire franco-espagnol témoigne d’un épisode majeur de l’histoire du Việt Nam. En septembre 1858, une expédition franco-espagnole débarque à Tourane, l’actuelle Đà Nẵng. L’occupation de la place se prolonge jusqu’en mars 1860. Confrontée à la résistance vietnamienne ainsi qu’à d’importantes difficultés logistiques et sanitaires, cette entreprise de conquête s’achève localement par un échec colonial.</p>
+    <p class="body-copy">Le cimetière conserve les traces de cette histoire, mais son passé ne se limite pas à l’expédition de 1858-1860. Les recherches historiques et les enquêtes de terrain de Sunny Le Galloudec documentent <strong>33 tombes individuelles, un monument-ossuaire et une colonne pyramidale</strong>. Plusieurs sépultures concernent également des marins décédés après 1860. L’identification de certaines tombes reste incomplète, notamment parmi les sépultures espagnoles.</p>
+    <h3>Un patrimoine façonné par le temps</h3>
+    <p class="body-copy">Le site a connu plusieurs phases d’aménagement, de protection et d’entretien. Des premières opérations de protection en 1888 aux travaux des années 1890, puis à la réorganisation du cimetière et à son inauguration le 13 juillet 1898, son histoire est aussi celle d’un monument continuellement transformé. Les alertes sur la dégradation des sépultures, notamment celle de Victor Goloubew en 1921, témoignent de préoccupations anciennes pour sa conservation.</p>
+    <p class="body-copy">Les intempéries, le climat et le vieillissement des matériaux ont progressivement altéré certaines pierres et rendu plusieurs épitaphes plus difficiles à lire. Avec elles, ce sont des noms, des parcours et des fragments d’histoire qui risquent de disparaître de la mémoire collective.</p>
+    <h3>Préserver et transmettre autrement</h3>
+    <p class="body-copy">Le projet <strong>Mémoire vivante</strong> propose une approche complémentaire de la conservation matérielle : documenter, expliquer et transmettre l’histoire du cimetière grâce au numérique, sans attendre qu’une restauration physique puisse être engagée.</p>
+    <p class="body-copy">À travers les inscriptions, les photographies, les archives et les restitutions numériques, cette application vous invite à découvrir les monuments, à retrouver les traces du passé et à mieux comprendre le contexte dans lequel ils ont été érigés.</p>
+    <p class="body-copy">Chaque pierre raconte une partie de l’histoire. Certaines identifications restent incertaines et toutes les questions ne sont pas résolues. Le parcours distingue donc les faits documentés, les interprétations historiques et les éléments qui restent à confirmer.</p>
+    <p class="body-copy"><strong>Explorer ce lieu, c’est préserver ses traces et contribuer à transmettre une histoire complexe, dans le respect des personnes qui l’ont vécue et des mémoires qu’elle engage.</strong></p>
+  </section>
   <div class="grid2">
     <div class="card"><div class="card-top"><div class="icon-box">⌖</div><h3 data-i18n="mapTitle">Se repérer sur le site</h3></div><p data-i18n="mapIntro">La position du cimetière est indicative. Les repères internes seront ajoutés après relevé.</p><p><button class="secondary" onclick="window.location.href='./plan-interactif.html'" data-i18n="seeMap">Voir la carte</button></p></div>
     <div class="card"><div class="card-top"><div class="icon-box">◎</div><h3 data-i18n="trailTitle">Votre parcours de découverte</h3></div><p data-i18n="trailIntro">Repérez les éléments patrimoniaux, scannez leurs plaques et ouvrez leurs fiches historiques.</p><p><button class="secondary" onclick="showPage('arPage')" data-i18n="scanPlaque">Reconnaître une plaque</button></p></div>
@@ -91,8 +103,8 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
 </section>
 
 <section class="page" id="arPage">
-  <div class="kicker" data-i18n="navAR">Expérience AR</div><h2 data-i18n="arIntroTitle">Deux façons de découvrir les inscriptions</h2>
-  <div class="card ar-use-cases"><h3 data-i18n="arCaseAutoTitle">1. Reconnaissance automatique d’une plaque</h3><p data-i18n="arCaseAutoText">Activez la caméra et présentez la plaque commémorative de l’ossuaire, entière et plutôt de face. Lorsqu’elle est reconnue, sa transcription et les ressources associées s’affichent. La plaque n’apparaît pas à l’écran avant sa détection.</p><h3 data-i18n="arCaseManualTitle">2. Reconstitution guidée d’une tombe</h3><p data-i18n="arCaseManualText">Pour certaines stèles, ouvrez d’abord la fiche correspondante dans le Plan interactif des tombes, puis choisissez « Essayer la restitution guidée sur place ». La caméra vous guidera pour caler manuellement le calque sur la pierre ; ce mode ne repose pas sur la reconnaissance automatique de la tombe.</p></div>
+  <div class="kicker">Reconnaître</div><h2>Reconnaître automatiquement une plaque</h2>
+  <div class="card ar-use-cases"><p>Activez la caméra puis présentez la plaque commémorative de l’ossuaire, entière et plutôt de face. Lorsqu’elle est reconnue, sa transcription et les ressources associées s’affichent. La plaque n’apparaît pas à l’écran avant sa détection.</p><p><a href="./reconstituer.html">Vous souhaitez reconstituer une inscription ? Accédez à la page « Reconstituer ».</a></p></div>
   <p class="body-copy" data-i18n="cameraIntro">Présentez la plaque entière, plutôt de face, avec un éclairage régulier. La première préparation de la cible peut prendre un moment.</p>
   <div class="controls camera-controls"><button class="primary" id="startBtn" onclick="startDetection()" data-i18n="startCamera">Activer la caméra</button><button class="secondary" id="stopBtn" onclick="stopDetection()" data-i18n="stopCamera">Arrêter la caméra</button></div>
   <div class="camera" id="cameraFrame">
@@ -158,11 +170,12 @@ R. I. P.</div>
 </main>
 <footer class="footer"><span data-i18n="sourceTitle">Une initiative portée par l’AECV</span> · <a href="https://aecv-mientrung.com/" target="_blank" rel="noopener">aecv-mientrung.com</a><br>© AECV · <span data-i18n="methodTitle">Notre méthode</span></footer>
 <nav class="bottomnav">
-  <button class="navbtn active" data-page="homePage" onclick="showPage('homePage')"><span class="navicon">⌂</span><span data-i18n="navHome">Accueil</span></button>
-  <button class="navbtn" data-page="mapPage" onclick="window.location.href='./plan-interactif.html'"><span class="navicon">⌖</span><span data-i18n="navMap">Carte & parcours</span></button>
-  <button class="navbtn" data-page="arPage" onclick="showPage('arPage')"><span class="navicon">◎</span><span data-i18n="navAR">Expérience AR</span></button>
-  <button class="navbtn" data-page="peoplePage" onclick="showPage('peoplePage')"><span class="navicon">♙</span><span data-i18n="navPeople">Personnes</span></button>
-  <button class="navbtn" data-page="sourcesPage" onclick="showPage('sourcesPage')"><span class="navicon">▤</span><span data-i18n="navSources">Sources</span></button>
+  <button class="navbtn active" data-page="homePage" onclick="showPage('homePage')"><span class="navicon">⌂</span><span>Accueil</span></button>
+  <button class="navbtn" onclick="window.location.href='./plan-interactif.html'"><span class="navicon">⌖</span><span>Carte</span></button>
+  <button class="navbtn" data-page="arPage" onclick="showPage('arPage')"><span class="navicon">◎</span><span>Reconnaître</span></button>
+  <button class="navbtn" onclick="window.location.href='./reconstituer.html'"><span class="navicon">▧</span><span>Reconstituer</span></button>
+  <button class="navbtn" data-page="peoplePage" onclick="showPage('peoplePage')"><span class="navicon">♙</span><span>Personnes</span></button>
+  <button class="navbtn" data-page="sourcesPage" onclick="showPage('sourcesPage')"><span class="navicon">▤</span><span>Sources</span></button>
 </nav>
 </div>
 <script src="./site-content.js"></script>
