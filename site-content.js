@@ -33,7 +33,7 @@ window.MEMOIRE_CONFIG = {
       navSources: "Sources",
       kicker: "Un lieu de mémoire à explorer",
       heroTitle: "Lire le lieu, retrouver les histoires.",
-      heroSubtitle: "Une découverte patrimoniale au cimetière franco-espagnol de Đà Nẵng, portée par l’AECV.",
+      heroSubtitle: "Explorez le cimetière franco-espagnol de Đà Nẵng à travers son plan interactif, ses monuments, les inscriptions conservées et les sources historiques. La réalité augmentée aide à lire et à restituer les traces du passé, en distinguant les faits établis des éléments encore à vérifier.",
       explore: "Commencer la visite",
       seeMap: "Voir la carte",
       scanPlaque: "Reconnaître une plaque",
