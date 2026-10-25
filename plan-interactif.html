@@ -338,7 +338,7 @@ function showMarkerPopup(id){
  }else{
   const r=byId[id];if(!r)return;
   title=r.name||r.title;status=statusHuman(r);
-  summary=r.epigraphicText||r.archiveComplements||r.physicalInscriptionState||'Aucune information complémentaire disponible.';
+  summary=r.physicalInscriptionState||r.archiveComplements||'Consultez la fiche pour les informations documentées.';
   if(String(id)==='5')arHref='./ar-correard-manuel.html';
   else if(['7','8','15'].includes(String(id)))arHref='./ar-restitution-guidee.html?tombe='+encodeURIComponent(String(id));
  }
@@ -372,6 +372,6 @@ initMap();applyFilters();renderZoom();svg.querySelectorAll('.map-point text').fo
 <a href="./plan-interactif.html" class="active" aria-current="page"><span class="navicon">⌖</span><span>Carte</span></a>
 <a href="./index.html?vue=ar"><span class="navicon">◎</span><span>Reconnaître</span></a>
 <a href="./reconstituer.html"><span class="navicon">▧</span><span>Reconstituer</span></a>
-<a href="./index.html?vue=personnes"><span class="navicon">♙</span><span>Personnes</span></a>
+<a href="./biographies.html"><span class="navicon">♙</span><span>Biographies</span></a>
 <a href="./index.html?vue=sources"><span class="navicon">▤</span><span>Sources</span></a>
 </nav></body></html>
