@@ -90,9 +90,9 @@ summary{cursor:pointer;font-size:11px;font-weight:800}
    <option value="ALL">Toutes les nationalités</option><option value="France">🇫🇷 France</option><option value="Espagne">🇪🇸 Espagne</option><option value="UNKNOWN">Nationalité non renseignée</option>
   </select>
   <select id="insFilter" aria-label="Filtrer par inscription">
-   <option value="ALL">Tous les statuts d’inscription</option><option value="known">Inscription documentée</option><option value="none">Aucune inscription connue</option>
+   <option value="ALL">Tous les statuts d’inscription</option><option value="known" selected>Inscriptions documentées (par défaut)</option><option value="none">Aucune inscription connue</option>
   </select>
-  <label class="check"><input id="numToggle" type="checkbox" checked> Afficher les numéros</label>
+  <label class="check"><input id="numToggle" type="checkbox"> Afficher les numéros</label>
  </div>
  <div class="map-zoom-toolbar" role="group" aria-label="Contrôles de zoom du plan">
    <button type="button" class="zoom-btn" id="zoomOut" aria-label="Dézoomer" title="Dézoomer">−</button>
@@ -116,7 +116,8 @@ summary{cursor:pointer;font-size:11px;font-weight:800}
   <select id="nameSelect" class="bottom-select"><option value="">Choisir une personne identifiée…</option></select>
   <div class="muted" style="margin-top:6px">Seules les tombes disposant d’un nom ou d’une identité proposée sont listées ici.</div>
  </div>
- <div class="map-note">Le plan schématique est conservé tel que fourni. Le repère A désigne l’ossuaire. La pyramide B n’est pas placée car son emplacement exact n’est pas défini dans le schéma.</div>
+ <div class="map-note">Le plan schématique est conservé tel que fourni. Le repère A désigne l’ossuaire. La pyramide B n’est pas placée car son emplacement exact n’est pas défini dans le schéma. Les plaques équipées pour la reconnaissance AR restent accessibles depuis « Expérience AR ».</div>
+ <section class="panel visit-progress" aria-live="polite" style="margin-top:14px"><div class="panel-head"><h2>Ma progression</h2><span class="muted">Enregistrée sur cet appareil</span></div><div class="progress-grid" style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px"><div class="data-block"><h3>Tombes explorées</h3><strong id="exploredCount" style="font:500 26px Georgia,serif">0 / 33</strong><div class="progressbar"><span id="exploredBar" style="width:0"></span></div></div><div class="data-block"><h3>Reconstitutions visualisées</h3><strong id="restoredCount" style="font:500 26px Georgia,serif">0 / 4</strong><div class="progressbar"><span id="restoredBar" style="width:0"></span></div></div></div><p class="muted" style="font-size:11px;margin-bottom:0">Ouvrir la fiche d’une tombe l’ajoute aux tombes explorées. Après une expérience de restitution guidée, confirme sa visualisation dans la fiche. Les choix sont modifiables et restent stockés localement.</p></section>
 </section>
 <aside class="panel">
  <div class="panel-head"><h2>Fiche de la tombe</h2><span class="muted" id="ficheNum">Aucune sélection</span></div>
@@ -277,11 +278,13 @@ function fieldBlock(title,text,kind=''){
 function addMeta(parent,label,value){
  const b=document.createElement('div');b.className='meta-box';const l=document.createElement('div');l.className='lab';l.textContent=label;const v=document.createElement('div');v.className='val';v.textContent=value||'Non renseigné dans le classeur';b.append(l,v);parent.appendChild(b)
 }
-function select(id){
+function select(id,markAsExplored=true){
  selected=id;
  document.querySelectorAll('.map-point').forEach(g=>g.classList.toggle('selected',g.dataset.id===id));
  if(id==='A'){renderOssuary();return}
  const r=byId[id];if(!r)return;
+ if(markAsExplored){try{localStorage.setItem('aecv-grave-explored-'+id,'1')}catch(e){}}
+ updateVisitProgress();
  document.getElementById('ficheNum').textContent='Tombe n° '+id;
  const box=document.getElementById('fiche');box.innerHTML='';
  const status=document.createElement('div');status.className='status '+category(r);status.textContent=statusHuman(r);box.appendChild(status);
@@ -310,9 +313,16 @@ function select(id){
  addMeta(grid,'Texte complet actuel pour contrôle',r.fullBaseText);
  details.appendChild(grid);box.appendChild(details);
  const action=document.createElement('div');action.style.marginTop='12px';action.style.display='flex';action.style.flexWrap='wrap';action.style.gap='8px';const b=document.createElement('button');b.className='btn';b.textContent='Copier les informations de la fiche';b.onclick=()=>{const content=[r.title,r.name,r.nationality,statusHuman(r),r.physicalInscriptionState,r.epigraphicText,r.archiveComplements,r.fullBaseText,r.sourceNotes].filter(Boolean).join('\\n\\n');if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(content).then(()=>{b.textContent='Informations copiées'}).catch(()=>{})}};action.appendChild(b);
- if(id==='5'){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-correard-manuel.html';ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}else if(['7','8','15'].includes(String(id))){const ar=document.createElement('a');ar.className='btn primary';ar.href='./ar-restitution-guidee.html?tombe='+encodeURIComponent(String(id));ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar)}
+ if(id==='5'||['7','8','15'].includes(String(id))){const ar=document.createElement('a');ar.className='btn primary';ar.href=id==='5'?'./ar-correard-manuel.html':'./ar-restitution-guidee.html?tombe='+encodeURIComponent(String(id));ar.textContent='Essayer la restitution guidée sur place';ar.style.textDecoration='none';action.appendChild(ar);const confirm=document.createElement('button');confirm.type='button';confirm.className='btn';confirm.textContent=isReconstructionViewed(id)?'✓ Reconstitution visualisée':'J’ai visualisé la reconstitution';confirm.setAttribute('aria-pressed',String(isReconstructionViewed(id)));confirm.onclick=()=>{try{if(isReconstructionViewed(id))localStorage.removeItem('aecv-grave-reconstructed-'+id);else localStorage.setItem('aecv-grave-reconstructed-'+id,'1')}catch(e){};confirm.textContent=isReconstructionViewed(id)?'✓ Reconstitution visualisée':'J’ai visualisé la reconstitution';confirm.setAttribute('aria-pressed',String(isReconstructionViewed(id)));updateVisitProgress()};action.appendChild(confirm)}
  box.appendChild(action);
  const nameSelect=document.getElementById('nameSelect');nameSelect.value=r.hasName?r.id:'';
+}
+function isReconstructionViewed(id){try{return localStorage.getItem('aecv-grave-reconstructed-'+id)==='1'}catch(e){return false}}
+function updateVisitProgress(){
+ const records=DATA.records;let explored=0;records.forEach(r=>{try{if(localStorage.getItem('aecv-grave-explored-'+r.id)==='1')explored++}catch(e){}});
+ const eligible=records.filter(r=>['5','7','8','15'].includes(String(r.id)));let reconstructed=eligible.filter(r=>isReconstructionViewed(r.id)).length;
+ const ec=document.getElementById('exploredCount'),eb=document.getElementById('exploredBar'),rc=document.getElementById('restoredCount'),rb=document.getElementById('restoredBar');
+ if(ec)ec.textContent=explored+' / '+records.length;if(eb)eb.style.width=(records.length?explored/records.length*100:0)+'%';if(rc)rc.textContent=reconstructed+' / '+eligible.length;if(rb)rb.style.width=(eligible.length?reconstructed/eligible.length*100:0)+'%';
 }
 function renderOssuary(){
  document.getElementById('ficheNum').textContent='Monument A';
@@ -326,5 +336,5 @@ document.getElementById('natFilter').addEventListener('change',applyFilters);
 document.getElementById('insFilter').addEventListener('change',applyFilters);
 document.getElementById('numToggle').addEventListener('change',e=>svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=e.target.checked?'':'none'));
 document.getElementById('nameSelect').addEventListener('change',e=>{if(e.target.value)select(e.target.value)});
-initMap();applyFilters();renderZoom();const requestedTomb=new URLSearchParams(window.location.search).get('tombe');select(requestedTomb&&byId[requestedTomb]?requestedTomb:'7');
+initMap();applyFilters();renderZoom();svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=document.getElementById('numToggle').checked?'':'none');const requestedTomb=new URLSearchParams(window.location.search).get('tombe');select(requestedTomb&&byId[requestedTomb]?requestedTomb:'7',false);updateVisitProgress();
 </script></body></html>
