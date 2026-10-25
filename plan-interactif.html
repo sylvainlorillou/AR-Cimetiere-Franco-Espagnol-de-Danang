@@ -29,6 +29,7 @@ select{border:1px solid #d8d2c5;background:#fffdf8;color:var(--ink);border-radiu
 .zoom-range{flex:1;min-width:80px;accent-color:var(--green)}
 .zoom-value{min-width:42px;text-align:right;font-size:11px;font-weight:800;color:var(--green)}
 .map-viewport{position:relative;width:100%;aspect-ratio:1252/1082;overflow:hidden;touch-action:none;cursor:grab;background:#fffdf8;border-top:1px solid var(--line);border-bottom:1px solid var(--line);user-select:none}
+.marker-popup{position:absolute;z-index:20;left:10px;right:10px;bottom:10px;display:none;max-height:44%;overflow:auto;background:#fffdf8;border:1px solid #d8d2c5;border-radius:12px;box-shadow:0 5px 24px #17251d40;padding:12px 42px 12px 13px;touch-action:pan-y;user-select:text;cursor:default}.marker-popup.show{display:block}.marker-popup h3{font:600 17px/1.2 Georgia,serif;margin:0 0 5px}.marker-popup p{font-size:11px;line-height:1.45;margin:4px 0;color:#536156}.marker-popup .popup-actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:9px}.marker-popup .popup-close{position:absolute;right:7px;top:7px;border:0;background:#f0ede5;border-radius:7px;width:29px;height:29px;font-size:20px;line-height:1;color:var(--ink)}.marker-popup .popup-action{display:inline-block;text-decoration:none;border:1px solid #d8d2c5;background:#f5f2eb;color:var(--ink);border-radius:8px;padding:8px 10px;font-size:11px;font-weight:750}.marker-popup .popup-action.primary{background:var(--green);border-color:var(--green);color:white}
 .map-viewport.dragging{cursor:grabbing}
 .mapbox{position:absolute;inset:0;width:100%;height:100%;line-height:0;transform-origin:0 0;will-change:transform}
 .mapbox img{width:100%;height:100%;display:block;object-fit:fill;user-select:none;-webkit-user-drag:none;pointer-events:none}
@@ -103,6 +104,7 @@ summary{cursor:pointer;font-size:11px;font-weight:800}
   </div>
   <div class="map-viewport" id="mapViewport" aria-label="Plan zoomable : glisser pour se déplacer, molette ou pincement pour zoomer">
    <div class="mapbox" id="mapbox"><img src="plan_cimetiere.png" alt="Plan du cimetière sans numéros imprimés"><svg id="mapOverlay" viewBox="0 0 1252 1082" role="group" aria-label="Repères cliquables des tombes"></svg></div>
+   <div class="marker-popup" id="markerPopup" role="region" aria-live="polite" aria-label="Détail du repère sélectionné"><button type="button" class="popup-close" id="popupClose" aria-label="Fermer">×</button><div id="popupContent"></div></div>
   </div>
  <div class="map-legend">
   <span class="key"><i class="swatch" style="background:#365c49"></i> Épitaphe transcrite</span>
@@ -280,6 +282,7 @@ function addMeta(parent,label,value){
 }
 function select(id,markAsExplored=true){
  selected=id;
+ showMarkerPopup(id);
  document.querySelectorAll('.map-point').forEach(g=>g.classList.toggle('selected',g.dataset.id===id));
  if(id==='A'){renderOssuary();return}
  const r=byId[id];if(!r)return;
@@ -324,6 +327,32 @@ function updateVisitProgress(){
  const ec=document.getElementById('exploredCount'),eb=document.getElementById('exploredBar'),rc=document.getElementById('restoredCount'),rb=document.getElementById('restoredBar');
  if(ec)ec.textContent=explored+' / '+records.length;if(eb)eb.style.width=(records.length?explored/records.length*100:0)+'%';if(rc)rc.textContent=reconstructed+' / '+eligible.length;if(rb)rb.style.width=(eligible.length?reconstructed/eligible.length*100:0)+'%';
 }
+function showMarkerPopup(id){
+ const popup=document.getElementById('markerPopup'),content=document.getElementById('popupContent');
+ content.innerHTML='';
+ let title='',status='',summary='',arHref='';
+ if(id==='A'){
+  title='Ossuaire';status='Monument central';
+  summary='Monument central représenté en gris sur le plan.';
+  arHref='./index.html?vue=ar';
+ }else{
+  const r=byId[id];if(!r)return;
+  title=r.name||r.title;status=statusHuman(r);
+  summary=r.epigraphicText||r.archiveComplements||r.physicalInscriptionState||'Aucune information complémentaire disponible.';
+  if(String(id)==='5')arHref='./ar-correard-manuel.html';
+  else if(['7','8','15'].includes(String(id)))arHref='./ar-restitution-guidee.html?tombe='+encodeURIComponent(String(id));
+ }
+ const h=document.createElement('h3');h.textContent=title;content.appendChild(h);
+ const st=document.createElement('p');st.style.fontWeight='800';st.textContent=status;content.appendChild(st);
+ const p=document.createElement('p');p.textContent=summary;content.appendChild(p);
+ const actions=document.createElement('div');actions.className='popup-actions';
+ const fiche=document.createElement('button');fiche.type='button';fiche.className='popup-action';fiche.textContent='Voir la fiche complète';
+ fiche.addEventListener('click',()=>{popup.classList.remove('show');document.querySelector('aside.panel').scrollIntoView({behavior:'smooth',block:'start'})});
+ actions.appendChild(fiche);
+ if(arHref){const a=document.createElement('a');a.className='popup-action primary';a.href=arHref;a.textContent=id==='A'?'Reconnaître une plaque (AR)':'Reconstituer sur place';actions.appendChild(a)}
+ content.appendChild(actions);popup.classList.add('show');
+}
+document.getElementById('popupClose').addEventListener('click',()=>document.getElementById('markerPopup').classList.remove('show'));
 function renderOssuary(){
  document.getElementById('ficheNum').textContent='Monument A';
  const box=document.getElementById('fiche');box.innerHTML='';
