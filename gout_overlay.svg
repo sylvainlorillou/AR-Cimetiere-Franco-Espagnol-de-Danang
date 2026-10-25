@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="815" height="1400" viewBox="0 0 815 1400">
+  <title>Calque de restitution guidée — Gout</title>
+  <defs>
+    
+    <filter id="flatStone" color-interpolation-filters="sRGB">
+      <feColorMatrix type="matrix" values="
+        0.2126 0.7152 0.0722 0 0
+        0.2126 0.7152 0.0722 0 0
+        0.2126 0.7152 0.0722 0 0
+        0.2126 0.7152 0.0722 0 0"/>
+      <feComponentTransfer>
+        <feFuncR type="discrete" tableValues="0.14 0.14 0.14 0.14 0.14 0.14 0.14 0.14 0.14 0.87 0.87 0.87 0.87 0.87 0.87 0.87"/>
+        <feFuncG type="discrete" tableValues="0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.13 0.855 0.855 0.855 0.855 0.855 0.855 0.855"/>
+        <feFuncB type="discrete" tableValues="0.12 0.12 0.12 0.12 0.12 0.12 0.12 0.12 0.12 0.81 0.81 0.81 0.81 0.81 0.81 0.81"/>
+        <feFuncA type="discrete" tableValues="1 1 1 1 1 1 1 1 1 1 1 1 1 1 1 0"/>
+      </feComponentTransfer>
+    </filter>
+    
+    
+  </defs>
+  <image x="0" y="0" width="815" height="1400" preserveAspectRatio="none" xlink:href="./TOMB_7.jpg" filter="url(#flatStone)"/>
+  
+</svg>
