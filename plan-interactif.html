@@ -336,5 +336,5 @@ document.getElementById('natFilter').addEventListener('change',applyFilters);
 document.getElementById('insFilter').addEventListener('change',applyFilters);
 document.getElementById('numToggle').addEventListener('change',e=>svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=e.target.checked?'':'none'));
 document.getElementById('nameSelect').addEventListener('change',e=>{if(e.target.value)select(e.target.value)});
-initMap();applyFilters();renderZoom();svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=document.getElementById('numToggle').checked?'':'none');const requestedTomb=new URLSearchParams(window.location.search).get('tombe');select(requestedTomb&&byId[requestedTomb]?requestedTomb:'7',false);updateVisitProgress();
+initMap();applyFilters();renderZoom();svg.querySelectorAll('.map-point text').forEach(t=>t.style.display=document.getElementById('numToggle').checked?'':'none');const requestedTomb=new URLSearchParams(window.location.search).get('tombe');if(requestedTomb&&byId[requestedTomb])select(requestedTomb,false);updateVisitProgress();
 </script></body></html>
