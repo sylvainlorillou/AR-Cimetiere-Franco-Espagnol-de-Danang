@@ -51,7 +51,7 @@ main{padding:0 20px 24px}.page{display:none;padding:22px 0 12px}.page.active{dis
 <main>
 <section class="page active" id="homePage">
   <div class="hero">
-    <div class="kicker" style="color:#e0c89f" data-i18n="kicker">Un lieu de mémoire à explorer</div>
+    <div class="kicker" style="color:#e0c89f">Mémoire vivante</div>
     <div class="heritage-stamp">AECV</div>
     <h1 style="font-size:clamp(24px,4vw,34px)">Cimetière franco-espagnol de Tiên Sa — Đà Nẵng</h1>
     <p>Un lieu de mémoire marqué par l’expédition franco-espagnole de 1858-1860, la résistance vietnamienne et une histoire funéraire qui se prolonge bien au-delà de cette période.</p><p>Aujourd’hui, les pierres et les épitaphes s’effacent peu à peu. À partir des recherches historiques, des archives et des observations de terrain, <strong>Mémoire vivante</strong> vous invite à explorer ce patrimoine, à retrouver les inscriptions et à découvrir les histoires que les monuments nous transmettent encore.</p><p>Le numérique ne remplace pas la conservation des lieux : il contribue à préserver et à transmettre les informations, tout en distinguant ce qui est établi de ce qui reste à découvrir.</p>
@@ -805,6 +805,6 @@ function applyUserLocation(){
 }
 setLanguage(currentLanguage);
 renderPeople();renderTranslation(0);updateProgress();
-if(new URLSearchParams(window.location.search).get('vue')==='ar')showPage('arPage');
+const requestedView=new URLSearchParams(window.location.search).get('vue');if(requestedView==='ar')showPage('arPage');else if(requestedView==='personnes')showPage('peoplePage');else if(requestedView==='sources')showPage('sourcesPage');
 </script>
 </body></html>
